@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dashboard : halaman tujuan setelah Login berhasil.
-     ScrollView dipakai hanya sebagai pembungkus agar isi tetap bisa digeser
-     pada layar kecil. Seluruh penataan komponen memakai ConstraintLayout. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +8,6 @@
     android:background="@color/green_soft"
     android:fillViewport="true"
     tools:context=".ui.dashboard.DashboardActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,8 +15,6 @@
         android:paddingTop="56dp"
         android:paddingEnd="24dp"
         android:paddingBottom="32dp">
-
-        <!-- Logo EZPICK -->
         <TextView
             android:id="@+id/tvLogo"
             android:layout_width="84dp"
@@ -34,8 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Kartu putih berisi data pengguna -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cardDashboard"
             android:layout_width="0dp"
@@ -46,7 +38,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvLogo">
-
             <TextView
                 android:id="@+id/tvJudul"
                 android:layout_width="wrap_content"
@@ -58,7 +49,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/tvSelamatDatang"
                 android:layout_width="wrap_content"
@@ -70,8 +60,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvJudul" />
-
-            <!-- Data pengguna diambil dari sesi SharedPreferences -->
             <TextView
                 android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
@@ -84,7 +72,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvSelamatDatang"
                 tools:text="ezpicktest1" />
-
             <TextView
                 android:id="@+id/tvEmail"
                 android:layout_width="wrap_content"
@@ -96,7 +83,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvUsername"
                 tools:text="ezpicktest1@example.com" />
-
             <TextView
                 android:id="@+id/tvNoTlp"
                 android:layout_width="wrap_content"
@@ -108,8 +94,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvEmail"
                 tools:text="081234567890" />
-
-            <!-- Tombol keluar : menghapus sesi login -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
                 style="@style/EzpickButton"

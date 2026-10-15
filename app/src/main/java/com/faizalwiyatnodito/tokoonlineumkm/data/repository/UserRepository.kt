@@ -10,61 +10,30 @@ import com.faizalwiyatnodito.tokoonlineumkm.data.network.User
 import com.google.gson.Gson
 import java.io.IOException
 
-/**
- * REPOSITORY
- * Penghubung antara ViewModel dan REST API.
- *
- * Tugasnya :
- * 1. Mengirim permintaan Login dan Register ke API.
- * 2. Menangkap kesalahan (koneksi putus, server bermasalah, format respons salah).
- * 3. Meneruskan hasilnya ke ViewModel dalam bentuk yang sudah rapi.
- * 4. Menyimpan dan membaca sesi login pada SharedPreferences.
- *
- * Dengan cara ini ViewModel tidak perlu berhubungan langsung dengan API.
- */
 class UserRepository(context: Context) {
-
     private val apiService: ApiService = ApiConfig.getApiService()
     private val gson = Gson()
 
     private val preferences: SharedPreferences =
         context.applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    // ---------------------------------------------------------------------
-    // Bagian REST API
-    // ---------------------------------------------------------------------
-
-    /**
-     * Mengirim permintaan Login ke API.
-     * Jika terjadi kesalahan, hasilnya tetap berupa LoginResponse
-     * dengan status false dan pesan yang mudah dipahami.
-     */
     suspend fun login(username: String, password: String): LoginResponse {
         return try {
             val response = apiService.login(username, password)
 
             if (response.isSuccessful) {
-                // Respons berhasil (kode 200)
                 response.body() ?: LoginResponse(false, PESAN_RESPONS_TIDAK_SESUAI)
             } else {
-                // Respons gagal (kode 400 / 401), pesan asli server dibaca dari errorBody
                 val pesan = bacaPesanError(response.errorBody()?.string())
                 LoginResponse(false, pesan ?: PESAN_LOGIN_GAGAL)
             }
         } catch (e: IOException) {
-            // Tidak ada internet atau server tidak dapat dijangkau
             LoginResponse(false, PESAN_KONEKSI)
         } catch (e: Exception) {
-            // Format respons tidak sesuai atau kesalahan lain
             LoginResponse(false, PESAN_RESPONS_TIDAK_SESUAI)
         }
     }
 
-    /**
-     * Mengirim permintaan Register ke API.
-     * Field yang dikirim disesuaikan dengan kebutuhan endpoint backend :
-     * username, email, password, dan no_tlp.
-     */
     suspend fun register(
         username: String,
         email: String,
@@ -87,10 +56,6 @@ class UserRepository(context: Context) {
         }
     }
 
-    /**
-     * Membaca pesan kesalahan dari body respons API.
-     * Mengembalikan null bila body kosong atau bukan JSON yang diharapkan.
-     */
     private fun bacaPesanError(errorBody: String?): String? {
         if (errorBody.isNullOrBlank()) return null
         return try {
@@ -101,14 +66,6 @@ class UserRepository(context: Context) {
         }
     }
 
-    // ---------------------------------------------------------------------
-    // Bagian sesi login (SharedPreferences)
-    // ---------------------------------------------------------------------
-
-    /**
-     * Menyimpan sesi login setelah autentikasi berhasil.
-     * Password pengguna tidak pernah disimpan di sini.
-     */
     fun simpanSesi(user: User) {
         preferences.edit()
             .putBoolean(KEY_IS_LOGIN, true)
@@ -119,10 +76,6 @@ class UserRepository(context: Context) {
             .apply()
     }
 
-    /**
-     * Memeriksa apakah sesi login masih berlaku.
-     * Sesi dianggap tidak valid bila penandanya false atau data pengguna hilang.
-     */
     fun sudahLogin(): Boolean {
         val isLogin = preferences.getBoolean(KEY_IS_LOGIN, false)
         val username = preferences.getString(KEY_USERNAME, "").orEmpty()
@@ -130,7 +83,6 @@ class UserRepository(context: Context) {
         return isLogin && username.isNotBlank() && id != 0
     }
 
-    /** Mengambil data pengguna yang tersimpan pada sesi. */
     fun ambilUser(): User {
         return User(
             id = preferences.getInt(KEY_ID, 0),
@@ -140,7 +92,6 @@ class UserRepository(context: Context) {
         )
     }
 
-    /** Menghapus sesi login, dipakai ketika pengguna keluar dari aplikasi. */
     fun hapusSesi() {
         preferences.edit().clear().apply()
     }

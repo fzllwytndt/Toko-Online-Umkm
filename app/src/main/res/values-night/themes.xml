@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Tampilan aplikasi dibuat sama dengan mode terang agar desain tetap konsisten. -->
     <style name="Base.Theme.TokoOnlineUmkm" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/green_primary</item>
         <item name="colorOnPrimary">@color/white</item>

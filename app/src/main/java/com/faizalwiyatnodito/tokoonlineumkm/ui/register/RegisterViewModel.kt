@@ -10,19 +10,12 @@ import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-/**
- * VIEWMODEL
- * Mengatur validasi form Register, proses pendaftaran melalui Repository,
- * serta status loading, berhasil, dan gagal.
- */
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
-
     private val repository = UserRepository(application)
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // Pesan kesalahan validasi untuk tiap kolom
     private val _usernameError = MutableLiveData<String?>()
     val usernameError: LiveData<String?> = _usernameError
 
@@ -41,14 +34,9 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
-    // Pesan sukses dari API, dipakai sebelum kembali ke halaman Login
     private val _registerBerhasil = MutableLiveData<String?>()
     val registerBerhasil: LiveData<String?> = _registerBerhasil
 
-    /**
-     * Dipanggil ketika tombol Submit ditekan.
-     * Seluruh input diperiksa dulu, baru dikirim ke Repository.
-     */
     fun register(
         username: String,
         email: String,
@@ -72,7 +60,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             if (response.status) {
                 _registerBerhasil.value = response.message
             } else {
-                // Misalnya : "Username atau Email sudah terdaftar."
                 _errorMessage.value = response.message
             }
 
@@ -80,10 +67,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-     * Memeriksa kelengkapan dan validitas seluruh input Register.
-     * Mengembalikan true bila seluruh input sudah benar.
-     */
     private fun validasiInput(
         username: String,
         email: String,
@@ -93,7 +76,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     ): Boolean {
         var valid = true
 
-        // Username
         when {
             username.isEmpty() -> {
                 _usernameError.value = pesan(R.string.error_username_kosong)
@@ -108,7 +90,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             else -> _usernameError.value = null
         }
 
-        // Email : tidak boleh kosong dan harus berformat benar
         when {
             email.isEmpty() -> {
                 _emailError.value = pesan(R.string.error_email_kosong)
@@ -123,7 +104,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             else -> _emailError.value = null
         }
 
-        // Password
         when {
             password.isEmpty() -> {
                 _passwordError.value = pesan(R.string.error_password_kosong)
@@ -138,7 +118,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             else -> _passwordError.value = null
         }
 
-        // Konfirmasi password harus sama dengan password
         when {
             konfirmasiPassword.isEmpty() -> {
                 _konfirmasiPasswordError.value = pesan(R.string.error_konfirmasi_kosong)
@@ -153,7 +132,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             else -> _konfirmasiPasswordError.value = null
         }
 
-        // Nomor telepon
         when {
             noTlp.isEmpty() -> {
                 _noTlpError.value = pesan(R.string.error_no_tlp_kosong)
@@ -171,7 +149,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         return valid
     }
 
-    /** Mengambil teks pesan dari strings.xml. */
     private fun pesan(idTeks: Int, vararg nilai: Any): String =
         getApplication<Application>().getString(idTeks, *nilai)
 

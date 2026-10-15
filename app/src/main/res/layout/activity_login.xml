@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 02 - Login : form masuk menggunakan username dan password.
-     ScrollView dipakai hanya sebagai pembungkus agar form tetap bisa digeser
-     pada layar kecil. Seluruh penataan komponen memakai ConstraintLayout. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +8,6 @@
     android:background="@color/green_soft"
     android:fillViewport="true"
     tools:context=".ui.login.LoginActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,8 +15,6 @@
         android:paddingTop="56dp"
         android:paddingEnd="24dp"
         android:paddingBottom="32dp">
-
-        <!-- Logo EZPICK -->
         <TextView
             android:id="@+id/tvLogo"
             android:layout_width="84dp"
@@ -34,8 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Kartu putih berisi form Login -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cardLogin"
             android:layout_width="0dp"
@@ -46,7 +38,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvLogo">
-
             <TextView
                 android:id="@+id/tvJudul"
                 android:layout_width="wrap_content"
@@ -58,8 +49,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Kolom username -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilUsername"
                 style="@style/EzpickInputLayout"
@@ -71,7 +60,6 @@
                 app:layout_constraintTop_toBottomOf="@id/tvJudul"
                 app:startIconContentDescription="@string/desc_icon_username"
                 app:startIconDrawable="@drawable/ic_person">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUsername"
                     android:layout_width="match_parent"
@@ -84,8 +72,6 @@
                     android:textColorHint="@color/text_hint"
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Kolom password -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPassword"
                 style="@style/EzpickInputLayout"
@@ -99,7 +85,6 @@
                 app:layout_constraintTop_toBottomOf="@id/tilUsername"
                 app:startIconContentDescription="@string/desc_icon_password"
                 app:startIconDrawable="@drawable/ic_lock">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
@@ -112,8 +97,6 @@
                     android:textColorHint="@color/text_hint"
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Tombol Masuk -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMasuk"
                 style="@style/EzpickButton"
@@ -123,8 +106,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tilPassword" />
-
-            <!-- Indikator loading saat permintaan API berlangsung -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="28dp"
@@ -137,8 +118,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btnMasuk"
                 tools:visibility="visible" />
-
-            <!-- Navigasi menuju halaman Register -->
             <TextView
                 android:id="@+id/tvBelumPunyaAkun"
                 android:layout_width="wrap_content"
@@ -152,7 +131,6 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/progressBar" />
-
             <TextView
                 android:id="@+id/tvDaftar"
                 android:layout_width="wrap_content"

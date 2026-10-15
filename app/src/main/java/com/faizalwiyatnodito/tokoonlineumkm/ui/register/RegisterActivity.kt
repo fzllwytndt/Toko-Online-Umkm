@@ -11,13 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityRegisterBinding
 import com.google.android.material.snackbar.Snackbar
 
-/**
- * VIEW
- * Menampilkan form Register dan menerima input pengguna.
- * Validasi dan pengiriman data dikerjakan oleh RegisterViewModel.
- */
 class RegisterActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
 
@@ -32,7 +26,6 @@ class RegisterActivity : AppCompatActivity() {
         amatiViewModel()
     }
 
-    /** Memberi jarak aman agar tampilan tidak tertutup status bar dan navigation bar. */
     private fun aturInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -42,7 +35,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun aturTombol() {
-        // Tombol Submit : mengirim seluruh input ke ViewModel
         binding.btnSubmit.setOnClickListener {
             viewModel.register(
                 username = binding.etUsername.text.toString(),
@@ -53,21 +45,18 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
 
-        // Navigasi kembali ke halaman Login
         binding.tvMasuk.setOnClickListener {
             finish()
         }
     }
 
     private fun amatiViewModel() {
-        // Status loading : tombol dinonaktifkan selama permintaan diproses
         viewModel.isLoading.observe(this) { sedangLoading ->
             binding.progressBar.visibility = if (sedangLoading) View.VISIBLE else View.GONE
             binding.btnSubmit.isEnabled = !sedangLoading
             binding.tvMasuk.isEnabled = !sedangLoading
         }
 
-        // Pesan validasi ditampilkan di bawah kolom yang bermasalah
         viewModel.usernameError.observe(this) { binding.tilUsername.error = it }
         viewModel.emailError.observe(this) { binding.tilEmail.error = it }
         viewModel.passwordError.observe(this) { binding.tilPassword.error = it }
@@ -76,7 +65,6 @@ class RegisterActivity : AppCompatActivity() {
         }
         viewModel.noTlpError.observe(this) { binding.tilNoTlp.error = it }
 
-        // Pesan gagal dari API, misalnya "Username atau Email sudah terdaftar."
         viewModel.errorMessage.observe(this) { pesan ->
             if (!pesan.isNullOrBlank()) {
                 tampilkanPesan(pesan)
@@ -84,10 +72,8 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        // Register berhasil : tampilkan pesan lalu kembali ke halaman Login
         viewModel.registerBerhasil.observe(this) { pesan ->
             if (!pesan.isNullOrBlank()) {
-                // Toast dipakai di sini karena halaman langsung kembali ke Login
                 Toast.makeText(this, pesan, Toast.LENGTH_LONG).show()
                 viewModel.pesanBerhasilSudahDitampilkan()
                 finish()
@@ -95,7 +81,6 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    /** Menampilkan pesan gagal di bagian bawah layar selama pengguna masih di halaman ini. */
     private fun tampilkanPesan(pesan: String) {
         Snackbar.make(binding.root, pesan, Snackbar.LENGTH_LONG).show()
     }

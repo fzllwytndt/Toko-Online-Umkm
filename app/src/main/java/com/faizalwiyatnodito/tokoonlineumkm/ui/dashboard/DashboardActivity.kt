@@ -12,13 +12,7 @@ import com.faizalwiyatnodito.tokoonlineumkm.data.repository.UserRepository
 import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityDashboardBinding
 import com.faizalwiyatnodito.tokoonlineumkm.ui.login.LoginActivity
 
-/**
- * Halaman tujuan setelah Login berhasil.
- * Data yang ditampilkan diambil dari sesi yang tersimpan di SharedPreferences,
- * sehingga tidak perlu memanggil API lagi.
- */
 class DashboardActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var repository: UserRepository
 
@@ -31,7 +25,6 @@ class DashboardActivity : AppCompatActivity() {
 
         repository = UserRepository(this)
 
-        // Bila sesi sudah tidak valid, pengguna diminta login kembali
         if (!repository.sudahLogin()) {
             bukaLogin()
             return
