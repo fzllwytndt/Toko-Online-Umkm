@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kotak logo EZPICK pada halaman Splash (hijau muda) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/green_soft" />
+    <corners android:radius="36dp" />
+</shape>
