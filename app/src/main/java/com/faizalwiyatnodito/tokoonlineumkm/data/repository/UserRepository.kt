@@ -2,6 +2,7 @@ package com.faizalwiyatnodito.tokoonlineumkm.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ApiConfig
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ApiService
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.LoginResponse
@@ -28,8 +29,10 @@ class UserRepository(context: Context) {
                 LoginResponse(false, pesan ?: PESAN_LOGIN_GAGAL)
             }
         } catch (e: IOException) {
+            Log.e(TAG, "Login gagal terhubung ke server", e)
             LoginResponse(false, PESAN_KONEKSI)
         } catch (e: Exception) {
+            Log.e(TAG, "Login gagal membaca respons server", e)
             LoginResponse(false, PESAN_RESPONS_TIDAK_SESUAI)
         }
     }
@@ -50,8 +53,10 @@ class UserRepository(context: Context) {
                 RegisterResponse(false, pesan ?: PESAN_REGISTER_GAGAL)
             }
         } catch (e: IOException) {
+            Log.e(TAG, "Register gagal terhubung ke server", e)
             RegisterResponse(false, PESAN_KONEKSI)
         } catch (e: Exception) {
+            Log.e(TAG, "Register gagal membaca respons server", e)
             RegisterResponse(false, PESAN_RESPONS_TIDAK_SESUAI)
         }
     }
@@ -97,6 +102,7 @@ class UserRepository(context: Context) {
     }
 
     companion object {
+        private const val TAG = "UserRepository"
         private const val PREF_NAME = "sesi_toko_online"
         private const val KEY_IS_LOGIN = "is_login"
         private const val KEY_ID = "id"

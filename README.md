@@ -339,6 +339,48 @@ adb shell run-as com.faizalwiyatnodito.tokoonlineumkm cat /data/data/com.faizalw
 | Akses komponen layout | View Binding |
 | Minimal Android | 7.0 (API 24) |
 
+## Menguji API dengan Postman
+
+Koleksi Postman yang sudah berisi seluruh request tersedia pada `postman/EZPICK-API.postman_collection.json`. Di Postman pilih **Import** lalu arahkan ke berkas tersebut. Base URL disimpan sebagai variable `{{base_url}}`.
+
+Seluruh request POST memakai tab **Body** -> **x-www-form-urlencoded**. Mengirimkannya sebagai `raw / JSON` akan ditolak server dengan pesan "Data tidak lengkap. Semua field wajib diisi." walaupun isian sudah lengkap.
+
+### Endpoint Autentikasi
+
+| Permintaan | Method | Endpoint | Parameter | Hasil yang diharapkan |
+|---|---|---|---|---|
+| Daftar akun baru | POST | `auth/register` | `username`, `email`, `password`, `no_tlp` | HTTP 201, `"Registrasi berhasil."` |
+| Daftar dengan akun yang sama | POST | `auth/register` | parameter yang sama diulang | HTTP 400, `"Username atau Email sudah terdaftar."` |
+| Masuk dengan akun benar | POST | `auth/login` | `username`, `password` | HTTP 200 beserta data `id`, `username`, `email`, `no_tlp` |
+| Masuk dengan password salah | POST | `auth/login` | `password` sengaja dibuat salah | HTTP 401, `"Username atau Password salah."` |
+
+Dua permintaan terakhir dipakai untuk membuktikan bahwa pesan gagal dikirim memakai kode **HTTP 400 dan 401**, sehingga pada aplikasi Android pesannya harus dibaca lewat `errorBody()`.
+
+### Endpoint untuk Melihat Data
+
+| Permintaan | Method | Endpoint | Parameter |
+|---|---|---|---|
+| Daftar produk | GET | `products` | - |
+| Daftar kategori | GET | `categories/list` | - |
+| Profil pengguna | POST | `user/profile` | `user_id` |
+| Produk per kategori | POST | `products/category` | `category_id` |
+| Pencarian produk | POST | `products/search-advanced` | `keyword`, `filter` |
+
+Dua endpoint GET di atas dapat dibuka langsung lewat browser tanpa Postman.
+
+## Melacak Penyebab Gagal Terhubung
+
+Ketika aplikasi menampilkan pesan "Koneksi internet bermasalah atau server tidak dapat diakses.", penyebab aslinya dicatat `UserRepository` ke Logcat. Buka **Logcat** pada Android Studio lalu saring dengan kata `UserRepository`:
+
+| Isi catatan | Artinya |
+|---|---|
+| `UnknownHostException` | Perangkat tidak dapat menerjemahkan alamat server, biasanya karena koneksi mati |
+| `ConnectException` | Alamat terbaca tetapi sambungan ditolak |
+| `SocketTimeoutException` | Server tidak menjawab dalam batas waktu 30 detik |
+| `SSLHandshakeException` | Sertifikat server tidak dipercaya perangkat |
+
+Tanpa catatan ini, seluruh kesalahan jaringan akan terlihat sama saja dari sisi pengguna.
+
 ## Cara Menjalankan
 
 1. Buka project pada **Android Studio**.
