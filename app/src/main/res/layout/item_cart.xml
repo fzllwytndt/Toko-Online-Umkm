@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_item_card"
+    android:padding="14dp">
+
+    <TextView
+        android:id="@+id/tvNama"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/tvHapus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Paket Chiken Katsu" />
+
+    <TextView
+        android:id="@+id/tvHapus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@string/desc_hapus"
+        android:padding="4dp"
+        android:text="@string/desc_hapus"
+        android:textColor="@color/red_error"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvHarga"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/text_muted"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNama"
+        tools:text="Rp25.000 / item" />
+
+    <TextView
+        android:id="@+id/tvCatatan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/text_hint"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHarga"
+        tools:text="Catatan: pedas"
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnKurang"
+        style="@style/EzpickButtonKecil"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/desc_kurangi"
+        android:text="@string/simbol_kurang"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCatatan" />
+
+    <TextView
+        android:id="@+id/tvJumlah"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnKurang"
+        app:layout_constraintStart_toEndOf="@id/btnKurang"
+        app:layout_constraintTop_toTopOf="@id/btnKurang"
+        tools:text="2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTambah"
+        style="@style/EzpickButtonKecil"
+        android:contentDescription="@string/desc_tambah"
+        android:text="@string/simbol_tambah"
+        app:layout_constraintBottom_toBottomOf="@id/btnKurang"
+        app:layout_constraintStart_toEndOf="@id/tvJumlah"
+        app:layout_constraintTop_toTopOf="@id/btnKurang" />
+
+    <TextView
+        android:id="@+id/tvSubtotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/green_primary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnKurang"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnKurang"
+        tools:text="Rp50.000" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
