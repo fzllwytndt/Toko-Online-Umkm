@@ -1,0 +1,1313 @@
+{
+ "info": {
+  "name": "Toko Online UMKM Semarang API",
+  "description": "Koleksi pengujian REST API Toko Online UMKM Semarang (EZPICK).\n\nBackend dijalankan di komputer sendiri (localhost) pada port 3000 dan terhubung ke database MySQL db_toko_online.\n\nCatatan:\n- Base URL disimpan pada variable {{base_url}}. Ubah lewat tab Variables kalau port backend berbeda.\n- Folder diurutkan dari pengujian yang hanya membaca data sampai pengujian yang menulis data.\n- Request POST, PUT, dan DELETE pada folder Keranjang hanya bekerja pada baris keranjang yang dibuat sendiri oleh request POST di folder yang sama, lalu dihapus lagi di akhir. Data lama pada database tidak diubah.\n- Tidak ada password maupun kredensial database yang disimpan di dalam Collection ini.",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "variable": [
+  {
+   "key": "base_url",
+   "value": "http://localhost:3000",
+   "type": "string"
+  },
+  {
+   "key": "user_id",
+   "value": "1",
+   "type": "string"
+  },
+  {
+   "key": "cart_id",
+   "value": "",
+   "type": "string"
+  }
+ ],
+ "item": [
+  {
+   "name": "0. Cek Backend",
+   "item": [
+    {
+     "name": "Cek backend hidup",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status true\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api"
+       ]
+      },
+      "description": "Memastikan backend berjalan dan bisa diakses sebelum endpoint lain diuji."
+     }
+    }
+   ]
+  },
+  {
+   "name": "1. Autentikasi",
+   "item": [
+    {
+     "name": "Register - akun baru",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 201\", function () { pm.response.to.have.status(201); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"Registrasi berhasil\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/auth/register",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "auth",
+        "register"
+       ]
+      },
+      "description": "Mendaftarkan akun baru ke tabel users.\n\nJalankan sekali untuk melihat respons berhasil (HTTP 201). Kalau dijalankan lagi dengan username yang sama, responsnya berubah menjadi HTTP 409 karena username sudah terdaftar.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "username",
+         "value": "ujicobapostman",
+         "type": "text"
+        },
+        {
+         "key": "email",
+         "value": "ujicobapostman@example.com",
+         "type": "text"
+        },
+        {
+         "key": "password",
+         "value": "rahasia123",
+         "type": "text"
+        },
+        {
+         "key": "no_tlp",
+         "value": "081234567890",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Register gagal - email tidak valid",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/auth/register",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "auth",
+        "register"
+       ]
+      },
+      "description": "Menguji validasi backend. Email tanpa format yang benar ditolak sebelum data disimpan.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "username",
+         "value": "cobacoba",
+         "type": "text"
+        },
+        {
+         "key": "email",
+         "value": "bukanemail",
+         "type": "text"
+        },
+        {
+         "key": "password",
+         "value": "rahasia123",
+         "type": "text"
+        },
+        {
+         "key": "no_tlp",
+         "value": "081234567890",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Register gagal - username sudah terdaftar",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 409\", function () { pm.response.to.have.status(409); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/auth/register",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "auth",
+        "register"
+       ]
+      },
+      "description": "Username yang sudah ada di database ditolak dengan HTTP 409.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "username",
+         "value": "Faizal",
+         "type": "text"
+        },
+        {
+         "key": "email",
+         "value": "faizal@email.com",
+         "type": "text"
+        },
+        {
+         "key": "password",
+         "value": "rahasia123",
+         "type": "text"
+        },
+        {
+         "key": "no_tlp",
+         "value": "08123456789",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Login - akun terdaftar",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"Login berhasil\", function () { var d = pm.response.json(); pm.expect(d.status).to.eql(true); pm.expect(d.data).to.have.property(\"id\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/auth/login",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "auth",
+        "login"
+       ]
+      },
+      "description": "Login memakai akun hasil request Register di atas. Respons berisi data id, username, email, dan no_tlp.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "username",
+         "value": "ujicobapostman",
+         "type": "text"
+        },
+        {
+         "key": "password",
+         "value": "rahasia123",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Login gagal - password salah",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 401\", function () { pm.response.to.have.status(401); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/auth/login",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "auth",
+        "login"
+       ]
+      },
+      "description": "Password yang salah ditolak dengan HTTP 401. Pesannya sengaja tidak menyebut bagian mana yang salah.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "username",
+         "value": "ujicobapostman",
+         "type": "text"
+        },
+        {
+         "key": "password",
+         "value": "passwordsalah",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Login gagal - field kosong",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/auth/login",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "auth",
+        "login"
+       ]
+      },
+      "description": "Username dan password kosong ditolak dengan HTTP 422 sebelum query dijalankan.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "username",
+         "value": "",
+         "type": "text"
+        },
+        {
+         "key": "password",
+         "value": "",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "2. Kategori",
+   "item": [
+    {
+     "name": "Daftar kategori",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"data berupa array\", function () { pm.expect(pm.response.json().data).to.be.an(\"array\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/categories",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "categories"
+       ]
+      },
+      "description": "Mengambil seluruh isi tabel categories, diurutkan berdasarkan sort_order."
+     }
+    }
+   ]
+  },
+  {
+   "name": "3. Produk",
+   "item": [
+    {
+     "name": "Daftar semua produk",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"data berupa array\", function () { pm.expect(pm.response.json().data).to.be.an(\"array\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products"
+       ]
+      },
+      "description": "Mengambil seluruh produk beserta nama kategorinya."
+     }
+    },
+    {
+     "name": "Daftar produk per kategori",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"semua produk sesuai kategori\", function () { pm.response.json().data.forEach(function (p) { pm.expect(p.category_id).to.eql(1); }); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products?category_id=1",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products"
+       ],
+       "query": [
+        {
+         "key": "category_id",
+         "value": "1"
+        }
+       ]
+      },
+      "description": "Menyaring produk berdasarkan kolom category_id."
+     }
+    },
+    {
+     "name": "Cari produk",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status true\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products?search=katsu",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products"
+       ],
+       "query": [
+        {
+         "key": "search",
+         "value": "katsu"
+        }
+       ]
+      },
+      "description": "Mencari produk berdasarkan sebagian nama."
+     }
+    },
+    {
+     "name": "Produk best seller",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"semua best seller\", function () { pm.response.json().data.forEach(function (p) { pm.expect(p.is_best_seller).to.eql(true); }); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products?best_seller=1",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products"
+       ],
+       "query": [
+        {
+         "key": "best_seller",
+         "value": "1"
+        }
+       ]
+      },
+      "description": "Hanya menampilkan produk dengan is_best_seller bernilai 1."
+     }
+    },
+    {
+     "name": "Detail produk",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"id sesuai\", function () { pm.expect(pm.response.json().data.id).to.eql(1); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products/1",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products",
+        "1"
+       ]
+      },
+      "description": "Mengambil satu produk berdasarkan ID."
+     }
+    },
+    {
+     "name": "Detail produk - tidak ditemukan",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 404\", function () { pm.response.to.have.status(404); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products/9999",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products",
+        "9999"
+       ]
+      },
+      "description": "ID yang tidak ada di database dijawab HTTP 404."
+     }
+    },
+    {
+     "name": "Detail produk - ID bukan angka",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/products/abc",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "products",
+        "abc"
+       ]
+      },
+      "description": "ID yang bukan angka ditolak HTTP 422 sebelum query dijalankan."
+     }
+    }
+   ]
+  },
+  {
+   "name": "4. Keranjang",
+   "item": [
+    {
+     "name": "Isi keranjang pengguna",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"ada items dan total\", function () { var d = pm.response.json().data; pm.expect(d).to.have.property(\"items\"); pm.expect(d).to.have.property(\"total_harga\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/carts?user_id={{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts"
+       ],
+       "query": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}"
+        }
+       ]
+      },
+      "description": "Menampilkan isi keranjang satu pengguna beserta total item dan total harga."
+     }
+    },
+    {
+     "name": "Isi keranjang - tanpa user_id",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/carts",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts"
+       ]
+      },
+      "description": "Parameter user_id wajib diisi. Kalau kosong dijawab HTTP 422."
+     }
+    },
+    {
+     "name": "Tambah ke keranjang",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 201\", function () { pm.response.to.have.status(201); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "var d = pm.response.json();",
+         "pm.test(\"Berhasil ditambahkan\", function () { pm.expect(d.status).to.eql(true); });",
+         "pm.collectionVariables.set(\"cart_id\", d.data.id);"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/carts",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts"
+       ]
+      },
+      "description": "Menambahkan produk ke keranjang. ID baris yang terbentuk disimpan otomatis ke variable {{cart_id}} supaya bisa dipakai request PUT dan DELETE di bawah.\n\nBaris inilah satu-satunya data yang ditulis oleh pengujian ini, dan dihapus lagi oleh request DELETE di akhir folder.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}",
+         "type": "text"
+        },
+        {
+         "key": "product_id",
+         "value": "7",
+         "type": "text"
+        },
+        {
+         "key": "quantity",
+         "value": "1",
+         "type": "text"
+        },
+        {
+         "key": "notes",
+         "value": "pengujian postman",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Tambah ke keranjang - produk tidak ada",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 404\", function () { pm.response.to.have.status(404); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/carts",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts"
+       ]
+      },
+      "description": "Produk yang tidak ada di tabel products ditolak HTTP 404.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}",
+         "type": "text"
+        },
+        {
+         "key": "product_id",
+         "value": "9999",
+         "type": "text"
+        },
+        {
+         "key": "quantity",
+         "value": "1",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Ubah jumlah item keranjang",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"jumlah berubah\", function () { pm.expect(pm.response.json().data.quantity).to.eql(3); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "PUT",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/carts/{{cart_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts",
+        "{{cart_id}}"
+       ]
+      },
+      "description": "Mengubah jumlah pada baris keranjang yang dibuat request POST di atas.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "quantity",
+         "value": "3",
+         "type": "text"
+        },
+        {
+         "key": "notes",
+         "value": "pengujian postman diubah",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Ubah jumlah - nilai tidak valid",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "PUT",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/carts/{{cart_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts",
+        "{{cart_id}}"
+       ]
+      },
+      "description": "Jumlah di bawah 1 ditolak HTTP 422.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "quantity",
+         "value": "0",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Hapus item keranjang",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"berhasil dihapus\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "DELETE",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/carts/{{cart_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts",
+        "{{cart_id}}"
+       ]
+      },
+      "description": "Menghapus kembali baris keranjang yang dibuat oleh pengujian ini, sehingga isi database kembali seperti semula."
+     }
+    },
+    {
+     "name": "Hapus item keranjang - sudah tidak ada",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 404\", function () { pm.response.to.have.status(404); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "DELETE",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/carts/{{cart_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "carts",
+        "{{cart_id}}"
+       ]
+      },
+      "description": "Menghapus baris yang sudah tidak ada dijawab HTTP 404."
+     }
+    }
+   ]
+  },
+  {
+   "name": "5. Pesanan",
+   "item": [
+    {
+     "name": "Riwayat pesanan pengguna",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"data berupa array\", function () { pm.expect(pm.response.json().data).to.be.an(\"array\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/orders?user_id={{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "orders"
+       ],
+       "query": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}"
+        }
+       ]
+      },
+      "description": "Menampilkan pesanan milik satu pengguna, lengkap dengan daftar barang pada setiap pesanan."
+     }
+    },
+    {
+     "name": "Detail pesanan",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"ada items\", function () { pm.expect(pm.response.json().data).to.have.property(\"items\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/orders/1",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "orders",
+        "1"
+       ]
+      },
+      "description": "Mengambil satu pesanan berdasarkan ID beserta isinya."
+     }
+    },
+    {
+     "name": "Detail pesanan - tidak ditemukan",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 404\", function () { pm.response.to.have.status(404); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/orders/9999",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "orders",
+        "9999"
+       ]
+      },
+      "description": "ID pesanan yang tidak ada dijawab HTTP 404."
+     }
+    }
+   ]
+  },
+  {
+   "name": "6. Pengguna",
+   "item": [
+    {
+     "name": "Data pengguna",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"tanpa password\", function () { pm.expect(pm.response.json().data).to.not.have.property(\"password\"); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/users/{{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "users",
+        "{{user_id}}"
+       ]
+      },
+      "description": "Dipakai halaman Profil. Kolom password tidak pernah ikut dikirim."
+     }
+    },
+    {
+     "name": "Data pengguna - tidak ditemukan",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 404\", function () { pm.response.to.have.status(404); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"status false\", function () { pm.expect(pm.response.json().status).to.eql(false); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/users/9999",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "users",
+        "9999"
+       ]
+      },
+      "description": "ID pengguna yang tidak ada dijawab HTTP 404."
+     }
+    },
+    {
+     "name": "Perbarui profil - ganti nickname",
+     "request": {
+      "method": "POST",
+      "header": [],
+      "body": {
+       "mode": "formdata",
+       "formdata": [
+        {
+         "key": "username",
+         "value": "Faizal",
+         "type": "text",
+         "description": "string, wajib, minimal 3 karakter"
+        },
+        {
+         "key": "avatar",
+         "type": "file",
+         "src": [],
+         "disabled": true,
+         "description": "file gambar (JPG/PNG/WEBP, maks 2 MB), opsional - aktifkan lalu pilih file untuk mengganti foto profil"
+        }
+       ]
+      },
+      "url": {
+       "raw": "{{base_url}}/api/users/{{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "users",
+        "{{user_id}}"
+       ]
+      },
+      "description": "Memperbarui profil pengguna (nickname + avatar). Dikirim sebagai form-data. Field avatar opsional; aktifkan centangnya lalu pilih file untuk mengganti foto."
+     },
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test('Profil berhasil diperbarui (status true)', function () {",
+         "    const json = pm.response.json();",
+         "    pm.expect(pm.response.code).to.eql(200);",
+         "    pm.expect(json.status).to.eql(true);",
+         "    pm.expect(json.data).to.have.property('username');",
+         "});"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "Perbarui profil gagal - username kosong",
+     "request": {
+      "method": "POST",
+      "header": [],
+      "body": {
+       "mode": "formdata",
+       "formdata": [
+        {
+         "key": "username",
+         "value": "",
+         "type": "text"
+        }
+       ]
+      },
+      "url": {
+       "raw": "{{base_url}}/api/users/{{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "users",
+        "{{user_id}}"
+       ]
+      },
+      "description": "Menguji validasi server: username kosong harus ditolak dengan HTTP 422."
+     },
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test('Username kosong ditolak (HTTP 422)', function () {",
+         "    pm.expect(pm.response.code).to.eql(422);",
+         "    pm.expect(pm.response.json().status).to.eql(false);",
+         "});"
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

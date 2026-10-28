@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_item_card"
+    android:padding="14dp">
+
+    <!-- Kolom image pada database masih kosong, jadi ditampilkan huruf awal nama produk. -->
+    <TextView
+        android:id="@+id/tvInisial"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_thumbnail_produk"
+        android:gravity="center"
+        android:textColor="@color/green_primary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="P" />
+
+    <TextView
+        android:id="@+id/tvNama"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvInisial"
+        app:layout_constraintTop_toTopOf="@id/tvInisial"
+        tools:text="Paket Chiken Katsu" />
+
+    <TextView
+        android:id="@+id/tvKategori"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/text_muted"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvInisial"
+        app:layout_constraintTop_toBottomOf="@id/tvNama"
+        tools:text="Menu Paket" />
+
+    <TextView
+        android:id="@+id/tvHarga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/green_primary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/tvInisial"
+        app:layout_constraintTop_toBottomOf="@id/tvKategori"
+        tools:text="Rp25.000" />
+
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_label_hijau"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="3dp"
+        android:textColor="@color/green_primary"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tvHarga"
+        app:layout_constraintStart_toEndOf="@id/tvHarga"
+        app:layout_constraintTop_toTopOf="@id/tvHarga"
+        tools:text="Best Seller"
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTambah"
+        style="@style/EzpickButton"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/button_tambah_keranjang"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHarga" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

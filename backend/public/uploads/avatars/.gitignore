@@ -1,0 +1,3 @@
+# Abaikan file avatar yang diunggah saat runtime, tetapi pertahankan foldernya.
+*
+!.gitignore

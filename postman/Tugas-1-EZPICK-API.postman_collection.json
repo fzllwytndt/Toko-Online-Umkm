@@ -1,0 +1,195 @@
+{
+  "info": {
+    "name": "EZPICK - Toko Online UMKM Semarang",
+    "description": "Koleksi endpoint REST API EZPICK. Seluruh request POST memakai body x-www-form-urlencoded. Base URL disimpan pada variable {{base_url}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://pasarrakyatbangetayukulon.my.id/toko_online",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "12",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autentikasi",
+      "item": [
+        {
+          "name": "Register - akun baru",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "ujicobapostman", "type": "text" },
+                { "key": "email", "value": "ujicobapostman@example.com", "type": "text" },
+                { "key": "password", "value": "rahasia123", "type": "text" },
+                { "key": "no_tlp", "value": "081234567890", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Mendaftarkan akun baru. Berhasil -> HTTP 201 {\"status\":true,\"message\":\"Registrasi berhasil.\"}. Gagal -> HTTP 400 {\"status\":false,\"message\":\"Username atau Email sudah terdaftar.\"}"
+          }
+        },
+        {
+          "name": "Login - akun terdaftar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "ujicoba77", "type": "text" },
+                { "key": "password", "value": "rahasia123", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Berhasil -> HTTP 200, berisi data {id, username, email, no_tlp}. Gagal -> HTTP 401 {\"status\":false,\"message\":\"Username atau Password salah.\"}"
+          }
+        },
+        {
+          "name": "Login - sengaja salah password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "ujicoba77", "type": "text" },
+                { "key": "password", "value": "passwordsalah", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Dipakai untuk membuktikan pesan gagal dikirim memakai HTTP 401, sehingga di Android harus dibaca lewat errorBody()."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Kategori",
+      "item": [
+        {
+          "name": "Daftar kategori",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/list",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "list"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Produk & Pencarian",
+      "item": [
+        {
+          "name": "Daftar produk",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": ["{{base_url}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Rekomendasi produk",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "urlencoded", "urlencoded": [] },
+            "url": {
+              "raw": "{{base_url}}/products/recommendations",
+              "host": ["{{base_url}}"],
+              "path": ["products", "recommendations"]
+            }
+          }
+        },
+        {
+          "name": "Produk per kategori",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "category_id", "value": "1", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/products/category",
+              "host": ["{{base_url}}"],
+              "path": ["products", "category"]
+            }
+          }
+        },
+        {
+          "name": "Pencarian produk",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "keyword", "value": "", "type": "text" },
+                { "key": "filter", "value": "Semua", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/products/search-advanced",
+              "host": ["{{base_url}}"],
+              "path": ["products", "search-advanced"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Profil Pengguna",
+      "item": [
+        {
+          "name": "Profil pengguna",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "user_id", "value": "{{user_id}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["user", "profile"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

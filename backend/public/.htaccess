@@ -1,0 +1,6 @@
+# Dipakai kalau backend dijalankan lewat Apache XAMPP.
+# Semua alamat diarahkan ke index.php supaya routing di routes/api.php yang menanganinya.
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
