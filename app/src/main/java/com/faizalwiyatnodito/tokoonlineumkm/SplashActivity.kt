@@ -9,18 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.faizalwiyatnodito.tokoonlineumkm.data.repository.UserRepository
-import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityMainBinding
+import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivitySplashBinding
 import com.faizalwiyatnodito.tokoonlineumkm.ui.dashboard.DashboardActivity
 import com.faizalwiyatnodito.tokoonlineumkm.ui.login.LoginActivity
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+// Halaman 01 - Splash. Menahan tampilan sebentar, lalu memeriksa sesi login
+// untuk menentukan halaman berikutnya.
+class SplashActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySplashBinding
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->

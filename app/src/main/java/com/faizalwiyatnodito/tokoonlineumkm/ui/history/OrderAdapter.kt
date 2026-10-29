@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.Order
-import com.faizalwiyatnodito.tokoonlineumkm.databinding.ItemOrderBinding
+import com.faizalwiyatnodito.tokoonlineumkm.databinding.ItemPesananBinding
 import com.faizalwiyatnodito.tokoonlineumkm.util.Format
 
 // Menampilkan riwayat pesanan beserta daftar barang pada setiap pesanan.
@@ -20,7 +20,7 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
-        val binding = ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemPesananBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return OrderViewHolder(binding)
     }
 
@@ -31,7 +31,7 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
     override fun getItemCount(): Int = daftarPesanan.size
 
     inner class OrderViewHolder(
-        private val binding: ItemOrderBinding
+        private val binding: ItemPesananBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun pasangData(pesanan: Order) {

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Empat menu utama sesuai gambar referensi: Beranda, Rekomendasi, Keranjang, Profil. -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_home"
+        android:id="@+id/menu_beranda"
         android:icon="@drawable/ic_home"
-        android:title="@string/menu_home" />
+        android:title="@string/menu_beranda" />
+    <item
+        android:id="@+id/menu_rekomendasi"
+        android:icon="@drawable/ic_star"
+        android:title="@string/menu_rekomendasi" />
     <item
         android:id="@+id/menu_keranjang"
         android:icon="@drawable/ic_cart"
         android:title="@string/menu_keranjang" />
-    <item
-        android:id="@+id/menu_riwayat"
-        android:icon="@drawable/ic_history"
-        android:title="@string/menu_riwayat" />
     <item
         android:id="@+id/menu_profil"
         android:icon="@drawable/ic_person"

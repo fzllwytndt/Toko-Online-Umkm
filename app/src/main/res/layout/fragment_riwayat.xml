@@ -5,21 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="20dp"
-    android:paddingTop="24dp"
+    android:paddingTop="12dp"
     android:paddingEnd="20dp"
     tools:context=".ui.history.HistoryFragment">
-
-    <TextView
-        android:id="@+id/tvJudul"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/riwayat_judul"
-        android:textColor="@color/text_dark"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRiwayat"
@@ -31,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvJudul"
+        app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="2"
         tools:listitem="@layout/item_order" />
 

@@ -38,15 +38,13 @@
     <string name="desc_loading">Sedang memproses</string>
 
     <!-- Bottom Navigation -->
-    <string name="menu_home">Home</string>
+    <string name="menu_beranda">Beranda</string>
+    <string name="menu_rekomendasi">Rekomendasi</string>
     <string name="menu_keranjang">Keranjang</string>
-    <string name="menu_riwayat">Riwayat</string>
     <string name="menu_profil">Profil</string>
 
     <!-- Halaman Home -->
-    <string name="home_judul">Daftar Produk</string>
-    <string name="home_subjudul">Menu UMKM Semarang langsung dari database</string>
-    <string name="home_kosong">Belum ada produk yang tersedia.</string>
+    <string name="home_kosong">Belum ada menu yang tersedia.</string>
     <string name="label_best_seller">Best Seller</string>
     <string name="label_habis">Stok habis</string>
     <string name="button_tambah_keranjang">+ Keranjang</string>
@@ -94,4 +92,52 @@
     <string name="simbol_kurang">−</string>
     <string name="simbol_tambah">+</string>
     <string name="pesan_jumlah_minimal">Jumlah minimal 1. Gunakan tombol hapus untuk membuang item.</string>
+
+    <!-- Bar atas (logo, pencarian, keranjang, foto profil) -->
+    <string name="hint_cari_menu">Cari menu…</string>
+    <string name="desc_logo">Logo EZPICK</string>
+    <string name="desc_keranjang">Keranjang</string>
+    <string name="desc_profil_singkat">Buka profil</string>
+
+    <!-- Halaman Beranda -->
+    <string name="beranda_banner">Klik, Pilih, Nikmati</string>
+    <string name="beranda_pilih_menu">Pilih Menu</string>
+    <string name="beranda_menu">Menu</string>
+    <string name="beranda_favorit">Favorit</string>
+    <string name="beranda_kategori_kosong">Kategori belum tersedia.</string>
+    <string name="beranda_favorit_kosong">Belum ada menu favorit.</string>
+    <string name="format_hasil_cari">Hasil pencarian: %1$s</string>
+    <string name="filter_semua">Semua</string>
+
+    <!-- Halaman Rekomendasi -->
+    <string name="rekomendasi_banner">Rekomendasi Makanan</string>
+    <string name="rekomendasi_best_seller">Best Seller</string>
+    <string name="rekomendasi_harga_terjangkau">Harga Terjangkau</string>
+    <string name="rekomendasi_best_seller_kosong">Belum ada menu best seller.</string>
+    <string name="rekomendasi_terjangkau_kosong">Belum ada menu yang bisa ditampilkan.</string>
+
+    <!-- Halaman Kategori -->
+    <string name="format_breadcrumb_kategori">Beranda / %1$s</string>
+    <string name="kategori_kosong">Belum ada menu pada kategori ini.</string>
+    <string name="desc_banner_kategori">Banner kategori</string>
+
+    <!-- Halaman Detail Produk -->
+    <string name="detail_judul">Detail Menu</string>
+    <string name="format_breadcrumb_detail">Beranda / %1$s</string>
+    <string name="detail_label_deskripsi">Deskripsi</string>
+    <string name="detail_label_kategori">Kategori</string>
+    <string name="detail_deskripsi_kosong">Deskripsi menu belum tersedia.</string>
+    <string name="detail_kategori_kosong">Tanpa kategori</string>
+    <string name="detail_tidak_ditemukan">Menu tidak ditemukan.</string>
+    <string name="desc_foto_menu">Foto menu</string>
+    <string name="placeholder_foto_menu">foto menu</string>
+
+    <!-- Pop up konfirmasi keluar -->
+    <string name="dialog_logout_judul">Keluar dari akun?</string>
+    <string name="dialog_logout_pesan">Kamu perlu login lagi untuk memesan dan melihat riwayat.</string>
+    <string name="dialog_logout_keluar">Keluar</string>
+
+    <!-- Pintasan pada halaman Profil -->
+    <string name="profil_riwayat_pesanan">Riwayat Pesanan</string>
+    <string name="profil_riwayat_keterangan">Lihat pesanan yang pernah dibuat</string>
 </resources>

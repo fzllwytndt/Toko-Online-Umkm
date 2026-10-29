@@ -15,7 +15,7 @@
         android:theme="@style/Theme.TokoOnlineUmkm"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.TokoOnlineUmkm.Splash"
             android:windowSoftInputMode="adjustResize">
@@ -40,5 +40,14 @@
             android:name=".ui.editprofile.EditProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.category.CategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.product.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.history.HistoryActivity"
+            android:exported="false" />
     </application>
 </manifest>

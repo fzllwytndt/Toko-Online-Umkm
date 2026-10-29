@@ -8,11 +8,11 @@ import java.util.Locale
 object Format {
     private val lokalIndonesia: Locale = Locale.forLanguageTag("id-ID")
 
-    // 25000.0 -> "Rp25.000"
+    // 25000.0 -> "Rp. 25.000" (mengikuti penulisan harga pada desain aplikasi)
     fun rupiah(nilai: Double): String {
-        val format = NumberFormat.getCurrencyInstance(lokalIndonesia)
+        val format = NumberFormat.getNumberInstance(lokalIndonesia)
         format.maximumFractionDigits = 0
-        return format.format(nilai)
+        return "Rp. " + format.format(nilai)
     }
 
     // "2026-10-12 05:29:07" -> "12 Okt 2026"

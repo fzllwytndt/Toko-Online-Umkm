@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Teks chip filter: putih ketika chip sedang dipilih, hijau tua ketika tidak. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/white" android:state_selected="true" />
+    <item android:color="@color/green_dark" />
+</selector>

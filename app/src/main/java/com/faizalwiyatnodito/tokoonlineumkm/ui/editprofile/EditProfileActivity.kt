@@ -11,13 +11,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityEditProfileBinding
+import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityEditProfilBinding
 import com.google.android.material.snackbar.Snackbar
 
 // Halaman Edit Profil: mengubah nickname (username) dan foto profil,
 // lalu mengirimnya ke server lewat ViewModel dan Repository.
 class EditProfileActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityEditProfileBinding
+    private lateinit var binding: ActivityEditProfilBinding
     private val viewModel: EditProfileViewModel by viewModels()
 
     // Menandai pengguna sudah memilih foto baru, supaya foto lama tidak menimpa pratinjau.
@@ -38,7 +38,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityEditProfileBinding.inflate(layoutInflater)
+        binding = ActivityEditProfilBinding.inflate(layoutInflater)
         setContentView(binding.root)
         aturInsets()
 

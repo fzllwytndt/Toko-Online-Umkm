@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.CartItem
-import com.faizalwiyatnodito.tokoonlineumkm.databinding.ItemCartBinding
+import com.faizalwiyatnodito.tokoonlineumkm.databinding.ItemKeranjangBinding
 import com.faizalwiyatnodito.tokoonlineumkm.util.Format
 
 // Menampilkan isi keranjang beserta tombol ubah jumlah dan hapus.
@@ -24,7 +24,7 @@ class CartAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemKeranjangBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CartViewHolder(binding)
     }
 
@@ -35,7 +35,7 @@ class CartAdapter(
     override fun getItemCount(): Int = daftarItem.size
 
     inner class CartViewHolder(
-        private val binding: ItemCartBinding
+        private val binding: ItemKeranjangBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun pasangData(item: CartItem) {

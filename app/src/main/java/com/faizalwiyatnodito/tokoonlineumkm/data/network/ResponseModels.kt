@@ -81,6 +81,11 @@ data class Product(
     @SerializedName("price")
     val price: Double = 0.0,
 
+    // Path atau URL foto menu dari server, misalnya "uploads/products/katsu.png".
+    // Bernilai null kalau produk belum memiliki foto.
+    @SerializedName("image")
+    val image: String? = null,
+
     @SerializedName("is_best_seller")
     val isBestSeller: Boolean = false,
 
@@ -88,7 +93,23 @@ data class Product(
     val isAvailable: Boolean = true,
 
     @SerializedName("description")
-    val description: String? = null
+    val description: String? = null,
+
+    // Hanya dikirim pada endpoint detail produk.
+    @SerializedName("created_at")
+    val createdAt: String? = null
+)
+
+// Respons GET /api/products/{id}. Bagian "data" berisi satu produk saja.
+data class ProductDetailResponse(
+    @SerializedName("status")
+    val status: Boolean = false,
+
+    @SerializedName("message")
+    val message: String = "",
+
+    @SerializedName("data")
+    val data: Product? = null
 )
 
 data class ProductListResponse(
@@ -212,4 +233,50 @@ data class OrderListResponse(
 
     @SerializedName("data")
     val data: List<Order> = emptyList()
+)
+
+// Satu baris daftar favorit. Nama field-nya berbeda dari Product karena
+// endpoint favorit menggabungkan tabel favorites dengan tabel products.
+data class FavoriteItem(
+    @SerializedName("id")
+    val id: Int = 0,
+
+    @SerializedName("product_id")
+    val productId: Int = 0,
+
+    @SerializedName("product_name")
+    val productName: String = "",
+
+    @SerializedName("price")
+    val price: Double = 0.0,
+
+    @SerializedName("image")
+    val image: String? = null,
+
+    @SerializedName("is_available")
+    val isAvailable: Boolean = true,
+
+    @SerializedName("is_best_seller")
+    val isBestSeller: Boolean = false
+) {
+    // Diubah menjadi Product supaya bisa memakai adapter dan kartu menu yang sama.
+    fun keProduk(): Product = Product(
+        id = productId,
+        name = productName,
+        price = price,
+        image = image,
+        isBestSeller = isBestSeller,
+        isAvailable = isAvailable
+    )
+}
+
+data class FavoriteListResponse(
+    @SerializedName("status")
+    val status: Boolean = false,
+
+    @SerializedName("message")
+    val message: String = "",
+
+    @SerializedName("data")
+    val data: List<FavoriteItem> = emptyList()
 )

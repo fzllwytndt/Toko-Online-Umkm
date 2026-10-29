@@ -3,7 +3,6 @@ package com.faizalwiyatnodito.tokoonlineumkm.data.repository
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ApiConfig
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ApiService
@@ -11,6 +10,7 @@ import com.faizalwiyatnodito.tokoonlineumkm.data.network.LoginResponse
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.RegisterResponse
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.User
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.UserResponse
+import com.faizalwiyatnodito.tokoonlineumkm.util.PemuatGambar
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -135,24 +135,7 @@ class UserRepository(context: Context) {
     // Mengunduh foto profil dari server lalu mengubahnya menjadi Bitmap.
     // Mengembalikan null kalau path kosong atau gambar gagal diambil,
     // sehingga pemanggil bisa menampilkan avatar cadangan (huruf awal nama).
-    suspend fun unduhAvatar(path: String?): Bitmap? {
-        if (path.isNullOrBlank()) return null
-
-        val url = if (path.startsWith("http")) path else ApiConfig.SERVER_URL + path.trimStart('/')
-
-        return try {
-            val response = apiService.unduhGambar(url)
-            val bytes = response.body()?.bytes()
-            if (response.isSuccessful && bytes != null) {
-                BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Gagal mengunduh foto profil", e)
-            null
-        }
-    }
+    suspend fun unduhAvatar(path: String?): Bitmap? = PemuatGambar.muat(path)
 
     fun simpanSesi(user: User) {
         preferences.edit()

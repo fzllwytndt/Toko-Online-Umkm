@@ -34,14 +34,24 @@ interface ApiService {
         @Field("no_tlp") noTlp: String
     ): Response<RegisterResponse>
 
+    // Daftar produk. Seluruh parameter bersifat opsional dan hanya ikut dikirim
+    // kalau nilainya tidak null, sesuai dokumentasi GET /api/products.
     @GET("products")
     suspend fun getProducts(
         @Query("category_id") categoryId: Int? = null,
-        @Query("search") search: String? = null
+        @Query("search") search: String? = null,
+        @Query("best_seller") bestSeller: String? = null
     ): Response<ProductListResponse>
+
+    // Detail satu produk berdasarkan ID yang dipilih pengguna: GET /api/products/{id}.
+    @GET("products/{id}")
+    suspend fun getProductDetail(@Path("id") id: Int): Response<ProductDetailResponse>
 
     @GET("categories")
     suspend fun getCategories(): Response<CategoryListResponse>
+
+    @GET("favorites")
+    suspend fun getFavorites(@Query("user_id") userId: Int): Response<FavoriteListResponse>
 
     @GET("carts")
     suspend fun getCarts(@Query("user_id") userId: Int): Response<CartResponse>

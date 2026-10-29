@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kotak foto menu. Tetap terlihat sebagai gambar pengganti kalau foto belum ada. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/green_placeholder" />
+    <corners android:radius="12dp" />
+</shape>

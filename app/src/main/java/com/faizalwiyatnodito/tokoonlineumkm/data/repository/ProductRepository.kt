@@ -4,6 +4,7 @@ import android.util.Log
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ApiConfig
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ApiService
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.CategoryListResponse
+import com.faizalwiyatnodito.tokoonlineumkm.data.network.ProductDetailResponse
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.ProductListResponse
 import java.io.IOException
 
@@ -12,9 +13,20 @@ import java.io.IOException
 class ProductRepository {
     private val apiService: ApiService = ApiConfig.getApiService()
 
-    suspend fun ambilProduk(idKategori: Int? = null, kataKunci: String? = null): ProductListResponse {
+    // GET /api/products. Parameter yang bernilai null tidak ikut dikirim,
+    // jadi fungsi ini dipakai bersama untuk daftar penuh, filter kategori,
+    // pencarian, maupun daftar best seller.
+    suspend fun ambilProduk(
+        idKategori: Int? = null,
+        kataKunci: String? = null,
+        hanyaBestSeller: Boolean = false
+    ): ProductListResponse {
         return try {
-            val response = apiService.getProducts(idKategori, kataKunci)
+            val response = apiService.getProducts(
+                categoryId = idKategori,
+                search = kataKunci?.takeIf { it.isNotBlank() },
+                bestSeller = if (hanyaBestSeller) "1" else null
+            )
 
             if (response.isSuccessful) {
                 response.body() ?: ProductListResponse(false, PesanApi.RESPONS_TIDAK_SESUAI)
@@ -28,6 +40,29 @@ class ProductRepository {
         } catch (e: Exception) {
             Log.e(TAG, "Gagal membaca respons produk", e)
             ProductListResponse(false, PesanApi.RESPONS_TIDAK_SESUAI)
+        }
+    }
+
+    // GET /api/products/{id}. ID selalu berasal dari produk yang benar-benar
+    // dipilih pengguna pada halaman Beranda, bukan nilai tetap di dalam kode.
+    suspend fun ambilDetailProduk(id: Int): ProductDetailResponse {
+        return try {
+            val response = apiService.getProductDetail(id)
+
+            if (response.isSuccessful) {
+                response.body() ?: ProductDetailResponse(false, PesanApi.RESPONS_TIDAK_SESUAI)
+            } else {
+                // Backend menjawab 404 dengan pesan "Produk tidak ditemukan.",
+                // jadi pesan aslinya dipakai apa adanya.
+                val pesan = PesanApi.bacaPesanError(response.errorBody()?.string())
+                ProductDetailResponse(false, pesan ?: PesanApi.GAGAL_MEMUAT)
+            }
+        } catch (e: IOException) {
+            Log.e(TAG, "Gagal terhubung ke server saat mengambil detail produk", e)
+            ProductDetailResponse(false, PesanApi.KONEKSI)
+        } catch (e: Exception) {
+            Log.e(TAG, "Gagal membaca respons detail produk", e)
+            ProductDetailResponse(false, PesanApi.RESPONS_TIDAK_SESUAI)
         }
     }
 

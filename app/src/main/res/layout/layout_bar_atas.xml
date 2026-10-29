@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Bar atas sesuai gambar referensi: logo EZPICK, kolom pencarian,
+    ikon keranjang beserta jumlah item, dan foto profil pengguna.
+    Dipakai bersama oleh halaman Beranda dan Rekomendasi lewat <include>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingStart="16dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/tvLogo"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_logo_bar"
+        android:contentDescription="@string/desc_logo"
+        android:gravity="center"
+        android:text="@string/app_logo"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etCari"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:autofillHints="name"
+        android:background="@drawable/bg_search"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:hint="@string/hint_cari_menu"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textColor="@color/text_dark"
+        android:textColorHint="@color/text_hint"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/wadahKeranjang"
+        app:layout_constraintStart_toEndOf="@id/tvLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/wadahKeranjang"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/wadahAvatarBar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgKeranjang"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="bottom|start"
+            android:contentDescription="@string/desc_keranjang"
+            android:src="@drawable/ic_cart"
+            app:tint="@color/text_dark" />
+
+        <!-- Jumlah item keranjang. Disembunyikan ketika keranjang kosong. -->
+        <TextView
+            android:id="@+id/tvBadge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/bg_badge_merah"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="3"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/wadahAvatarBar"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvInisialBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_circle_green"
+            android:contentDescription="@string/desc_profil_singkat"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="F" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgAvatarBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/desc_foto_profil"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:shapeAppearanceOverlay="@style/CircleImageView" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

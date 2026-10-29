@@ -136,9 +136,27 @@ Parameter tambahan pada `GET /api/products`:
 
 ### Mengapa produk hanya bisa dibaca
 
-Tabel `products` sudah berisi data katalog yang disiapkan sebelumnya, dan aturan tugas melarang mengubah data yang sudah ada. Karena itu endpoint produk sengaja dibuat **hanya membaca**.
+Katalog menu dikelola langsung dari sisi database, bukan lewat API. Karena itu endpoint produk sengaja dibuat **hanya membaca**.
 
 Method `POST`, `PUT`, dan `DELETE` tetap dibuat lengkap, tetapi ditempatkan pada **keranjang** — fitur yang datanya memang dibuat dan dihapus sendiri oleh pengguna, sehingga tidak ada data lama yang terganggu.
+
+### Melengkapi katalog menu
+
+Isi tabel `products` dilengkapi lewat `database/seed_produk.sql`:
+
+```
+mysql -u root db_toko_online < backend/database/seed_produk.sql
+```
+
+Berkas itu mengisi kolom `image` dan `description` untuk seluruh menu yang sudah ada, lalu menambahkan 3 menu untuk kategori **Promo Spesial** yang sebelumnya masih kosong. Berkas aman dijalankan berulang kali: `UPDATE` memakai ID yang sudah ada, dan `INSERT` memeriksa nama menu lebih dulu supaya tidak terduplikasi.
+
+Gambar menu disimpan di `public/uploads/produk/` dan dilayani sebagai berkas statis di luar `/api`, contoh:
+
+```
+http://10.0.2.2:3000/uploads/produk/miso-ramen.jpg
+```
+
+Kolom `image` berisi path relatifnya saja (`uploads/produk/miso-ramen.jpg`), mengikuti pola yang sama seperti kolom `avatar` pada tabel `users`.
 
 ---
 

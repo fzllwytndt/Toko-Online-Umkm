@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Kartu satu menu pada daftar 2 kolom (Beranda, Rekomendasi, dan Kategori).
+    Seluruh isinya berasal dari response API, tidak ada nilai contoh di dalam kode.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:background="@drawable/bg_item_card"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <FrameLayout
+        android:id="@+id/wadahGambar"
+        android:layout_width="match_parent"
+        android:layout_height="118dp">
+
+        <!-- Teks pengganti yang terlihat selama foto belum ada atau gagal dimuat. -->
+        <TextView
+            android:id="@+id/tvPlaceholderGambar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_gambar_produk"
+            android:gravity="center"
+            android:text="@string/placeholder_foto_menu"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgProduk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/desc_foto_menu"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:shapeAppearanceOverlay="@style/ShapeGambarProduk" />
+
+        <!-- Lapisan penanda ketika is_available dari API bernilai false. -->
+        <TextView
+            android:id="@+id/tvStokHabis"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_overlay_habis"
+            android:gravity="center"
+            android:text="@string/label_habis"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvNama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:minLines="2"
+        android:textColor="@color/text_dark"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Paket Ayam Geprek" />
+
+    <TextView
+        android:id="@+id/tvHarga"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/green_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Rp. 15.000" />
+
+</LinearLayout>

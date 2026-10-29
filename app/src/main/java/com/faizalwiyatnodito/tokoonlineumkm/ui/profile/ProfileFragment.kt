@@ -1,6 +1,7 @@
 package com.faizalwiyatnodito.tokoonlineumkm.ui.profile
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +12,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.faizalwiyatnodito.tokoonlineumkm.R
+import com.faizalwiyatnodito.tokoonlineumkm.databinding.DialogKonfirmasiLogoutBinding
 import com.faizalwiyatnodito.tokoonlineumkm.databinding.FragmentProfilBinding
 import com.faizalwiyatnodito.tokoonlineumkm.ui.editprofile.EditProfileActivity
+import com.faizalwiyatnodito.tokoonlineumkm.ui.history.HistoryActivity
 import com.faizalwiyatnodito.tokoonlineumkm.ui.login.LoginActivity
 
 // Halaman Profil: menampilkan data akun yang sedang login, foto profil,
@@ -56,12 +59,13 @@ class ProfileFragment : Fragment() {
             editProfilLauncher.launch(intent)
         }
 
-        binding.btnLogout.setOnClickListener {
-            viewModel.logout()
-            Toast.makeText(requireContext(), getString(R.string.pesan_logout), Toast.LENGTH_SHORT)
-                .show()
-            bukaLogin()
+        // Riwayat Pesanan tidak lagi berada di Bottom Navigation pada desain baru,
+        // jadi dibuka dari halaman Profil.
+        binding.kartuRiwayat.setOnClickListener {
+            startActivity(HistoryActivity.buatIntent(requireContext()))
         }
+
+        binding.btnLogout.setOnClickListener { tampilkanKonfirmasiKeluar() }
 
         if (savedInstanceState == null && viewModel.user.value == null) {
             viewModel.muatProfil()
@@ -99,6 +103,29 @@ class ProfileFragment : Fragment() {
                 binding.tvPesan.text = pesan
             }
         }
+    }
+
+    // Pop up konfirmasi sebelum sesi login dihapus, sesuai gambar referensi.
+    private fun tampilkanKonfirmasiKeluar() {
+        val dialogBinding = DialogKonfirmasiLogoutBinding.inflate(layoutInflater)
+        val dialog = Dialog(requireContext(), R.style.EzpickDialog)
+        dialog.setContentView(dialogBinding.root)
+
+        dialogBinding.btnBatal.setOnClickListener { dialog.dismiss() }
+
+        dialogBinding.btnKeluar.setOnClickListener {
+            dialog.dismiss()
+            keluarDariAkun()
+        }
+
+        dialog.show()
+    }
+
+    private fun keluarDariAkun() {
+        viewModel.logout()
+        Toast.makeText(requireContext(), getString(R.string.pesan_logout), Toast.LENGTH_SHORT)
+            .show()
+        bukaLogin()
     }
 
     // Huruf awal nama untuk avatar cadangan ketika foto profil belum ada.

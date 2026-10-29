@@ -58,4 +58,27 @@
     <style name="EzpickBottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/green_soft</item>
     </style>
+
+    <!-- Judul tiap bagian pada halaman Beranda dan Rekomendasi (Pilih Menu, Menu, Best Seller). -->
+    <style name="EzpickJudulBagian" parent="">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <!-- Pop up konfirmasi keluar memakai latar transparan supaya sudut kartunya terlihat membulat. -->
+    <style name="EzpickDialog" parent="Theme.Material3.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">88%</item>
+        <item name="android:windowMinWidthMinor">88%</item>
+    </style>
+    <!-- Sudut membulat untuk foto menu, mengikuti bentuk kotak gambar pada desain. -->
+    <style name="ShapeGambarProduk" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <!-- Sudut membulat untuk foto menu berukuran besar pada halaman Detail Menu. -->
+    <style name="ShapeGambarDetail" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lapisan abu kehijauan bertuliskan STOK HABIS di atas foto menu. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/green_overlay_habis" />
+    <corners android:radius="12dp" />
+</shape>

@@ -11,10 +11,10 @@ import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.data.repository.UserRepository
 import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityDashboardBinding
 import com.faizalwiyatnodito.tokoonlineumkm.ui.cart.CartFragment
-import com.faizalwiyatnodito.tokoonlineumkm.ui.history.HistoryFragment
 import com.faizalwiyatnodito.tokoonlineumkm.ui.home.HomeFragment
 import com.faizalwiyatnodito.tokoonlineumkm.ui.login.LoginActivity
 import com.faizalwiyatnodito.tokoonlineumkm.ui.profile.ProfileFragment
+import com.faizalwiyatnodito.tokoonlineumkm.ui.recommendation.RecommendationFragment
 
 // Halaman utama setelah login. Activity ini hanya bertugas menjadi wadah,
 // isi layarnya ditentukan oleh Fragment yang dipilih lewat Bottom Navigation.
@@ -36,9 +36,9 @@ class DashboardActivity : AppCompatActivity() {
 
         aturBottomNavigation()
 
-        // Saat pertama kali dibuka, halaman Home yang ditampilkan.
+        // Saat pertama kali dibuka, halaman Beranda yang ditampilkan.
         if (savedInstanceState == null) {
-            binding.bottomNavigation.selectedItemId = R.id.menu_home
+            binding.bottomNavigation.selectedItemId = R.id.menu_beranda
         }
     }
 
@@ -53,15 +53,21 @@ class DashboardActivity : AppCompatActivity() {
     private fun aturBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { menu ->
             val fragment: Fragment = when (menu.itemId) {
-                R.id.menu_home -> HomeFragment()
+                R.id.menu_beranda -> HomeFragment()
+                R.id.menu_rekomendasi -> RecommendationFragment()
                 R.id.menu_keranjang -> CartFragment()
-                R.id.menu_riwayat -> HistoryFragment()
                 else -> ProfileFragment()
             }
 
             tampilkanFragment(fragment)
             true
         }
+    }
+
+    // Dipakai bar atas halaman Beranda dan Rekomendasi agar ikon keranjang
+    // dan foto profil berpindah menu, bukan membuka halaman baru.
+    fun pilihMenu(idMenu: Int) {
+        binding.bottomNavigation.selectedItemId = idMenu
     }
 
     private fun tampilkanFragment(fragment: Fragment) {
