@@ -100,6 +100,21 @@
                 tools:itemCount="4"
                 tools:listitem="@layout/item_chip_kategori" />
 
+            <!-- Muncul hanya kalau GET /api/categories tidak mengembalikan kategori,
+                 supaya bagian "Pilih Menu" tidak terlihat kosong tanpa keterangan. -->
+            <TextView
+                android:id="@+id/tvKategoriKosong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/beranda_kategori_kosong"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

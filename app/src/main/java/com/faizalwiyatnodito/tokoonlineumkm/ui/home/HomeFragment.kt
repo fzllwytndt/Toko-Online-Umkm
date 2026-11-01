@@ -114,8 +114,13 @@ class HomeFragment : Fragment() {
             filterAdapter.perbarui(daftar, getString(R.string.filter_semua))
             filterAdapter.pilih(viewModel.idKategoriTerpilih.value)
 
-            binding.rvKategori.visibility = if (daftar.isEmpty()) View.GONE else View.VISIBLE
-            binding.rvFilter.visibility = if (daftar.isEmpty()) View.GONE else View.VISIBLE
+            // Kategori gagal dimuat atau memang belum ada: daftarnya disembunyikan
+            // dan diganti keterangan, bukan dibiarkan kosong tanpa penjelasan.
+            val kosong = daftar.isEmpty()
+
+            binding.rvKategori.visibility = if (kosong) View.GONE else View.VISIBLE
+            binding.rvFilter.visibility = if (kosong) View.GONE else View.VISIBLE
+            binding.tvKategoriKosong.visibility = if (kosong) View.VISIBLE else View.GONE
         }
 
         viewModel.daftarProduk.observe(viewLifecycleOwner) { daftar ->

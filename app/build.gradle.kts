@@ -1,5 +1,31 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
+}
+
+// Alamat backend dibaca dari local.properties, bukan ditulis di dalam kode.
+// Alasannya: IP komputer berbeda pada tiap mesin dan berubah setiap ganti
+// jaringan Wi-Fi, jadi kalau ditulis di kode nilainya ikut ter-commit lalu
+// basi di komputer lain. local.properties sudah didaftarkan pada .gitignore.
+//
+// Isi local.properties, contoh:
+//   server.url=http://192.168.1.5:3000/
+//
+// Kalau baris itu tidak ada, dipakai 10.0.2.2 yang cocok untuk Android Emulator.
+val alamatServer: String = run {
+    val berkas = rootProject.file("local.properties")
+    val isi = Properties()
+
+    if (berkas.exists()) {
+        berkas.inputStream().use { isi.load(it) }
+    }
+
+    val nilai = isi.getProperty("server.url")?.trim().orEmpty()
+    val alamat = nilai.ifEmpty { "http://10.0.2.2:3000/" }
+
+    // Retrofit mewajibkan baseUrl diakhiri garis miring.
+    if (alamat.endsWith("/")) alamat else "$alamat/"
 }
 
 android {
@@ -16,10 +42,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SERVER_URL", "\"$alamatServer\"")
     }
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     buildTypes {

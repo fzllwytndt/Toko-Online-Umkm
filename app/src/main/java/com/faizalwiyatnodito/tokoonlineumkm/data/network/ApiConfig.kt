@@ -1,5 +1,6 @@
 package com.faizalwiyatnodito.tokoonlineumkm.data.network
 
+import com.faizalwiyatnodito.tokoonlineumkm.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -7,23 +8,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiConfig {
-    // Alamat backend REST API yang dijalankan di komputer sendiri pada port 3000.
+    // Alamat root server (tanpa /api), contoh "http://10.0.2.2:3000/".
+    // Dipakai juga untuk menyusun URL penuh foto menu dan foto profil,
+    // karena berkas gambar dilayani di luar /api,
+    // contoh: http://10.0.2.2:3000/uploads/produk/miso-ramen.jpg
     //
-    // Alamat ini berbeda tergantung tempat aplikasi dijalankan:
-    // - Android Emulator  : http://10.0.2.2:3000/api/   (10.0.2.2 = localhost komputer host)
-    // - HP Android fisik  : http://<IP-lokal-komputer>:3000/api/  misalnya http://192.168.1.5:3000/api/
-    // - Postman / browser di komputer yang sama : http://localhost:3000/api/
+    // Nilainya TIDAK ditulis di sini, melainkan dibaca dari local.properties
+    // lewat buildConfigField pada app/build.gradle.kts. Alasannya alamat ini
+    // berbeda pada tiap komputer dan berubah setiap ganti jaringan:
+    // - Android Emulator  : http://10.0.2.2:3000/  (dipakai kalau tidak diatur)
+    // - HP Android fisik  : http://<IP-lokal-komputer>:3000/
     //
-    // Catatan: pada sebagian emulator alamat 10.0.2.2 tidak bisa dipakai karena
-    // jaringan Wi-Fi dan jaringan seluler bawaan emulator berada pada subnet yang sama.
-    // Kalau aplikasi menampilkan pesan koneksi gagal padahal backend sudah jalan,
-    // ganti baris di bawah ini dengan IP lokal komputer, lalu daftarkan IP tersebut
-    // pada res/xml/network_security_config.xml.
-    // Alamat root server (tanpa /api). Dipakai untuk menyusun URL penuh foto profil,
-    // karena file avatar dilayani di luar /api, contoh: http://10.0.2.2:3000/uploads/avatars/xxx.png
-    const val SERVER_URL = "http://192.168.18.154:3000/"
+    // Cara menggantinya, tambahkan satu baris pada local.properties:
+    //   server.url=http://192.168.1.5:3000/
+    // lalu Sync/Rebuild. Tidak ada berkas kode yang perlu disentuh.
+    val SERVER_URL: String = BuildConfig.SERVER_URL
 
-    private const val BASE_URL = SERVER_URL + "api/"
+    private val BASE_URL = SERVER_URL + "api/"
 
     private val instance: ApiService by lazy {
         val loggingInterceptor = HttpLoggingInterceptor().apply {

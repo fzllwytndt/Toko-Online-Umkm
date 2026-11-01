@@ -1,7 +1,7 @@
 {
  "info": {
   "name": "Toko Online UMKM Semarang API",
-  "description": "Koleksi pengujian REST API Toko Online UMKM Semarang (EZPICK).\n\nBackend dijalankan di komputer sendiri (localhost) pada port 3000 dan terhubung ke database MySQL db_toko_online.\n\nCatatan:\n- Base URL disimpan pada variable {{base_url}}. Ubah lewat tab Variables kalau port backend berbeda.\n- Folder diurutkan dari pengujian yang hanya membaca data sampai pengujian yang menulis data.\n- Request POST, PUT, dan DELETE pada folder Keranjang hanya bekerja pada baris keranjang yang dibuat sendiri oleh request POST di folder yang sama, lalu dihapus lagi di akhir. Data lama pada database tidak diubah.\n- Tidak ada password maupun kredensial database yang disimpan di dalam Collection ini.",
+  "description": "Koleksi pengujian REST API Toko Online UMKM Semarang (EZPICK).\n\nBackend dijalankan di komputer sendiri (localhost) pada port 3000 dan terhubung ke database MySQL db_toko_online.\n\nCatatan:\n- Base URL disimpan pada variable {{base_url}}. Ubah lewat tab Variables kalau port backend berbeda.\n- Folder diurutkan dari pengujian yang hanya membaca data sampai pengujian yang menulis data.\n- Request POST dan DELETE pada folder Favorit hanya bekerja pada produk {{favorite_product_id}}, yang ditambahkan lalu dihapus lagi di dalam folder yang sama. Data favorit lama tidak diubah.\n- Request POST, PUT, dan DELETE pada folder Keranjang hanya bekerja pada baris keranjang yang dibuat sendiri oleh request POST di folder yang sama, lalu dihapus lagi di akhir. Data lama pada database tidak diubah.\n- Tidak ada password maupun kredensial database yang disimpan di dalam Collection ini.",
   "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
  },
  "variable": [
@@ -18,6 +18,11 @@
   {
    "key": "cart_id",
    "value": "",
+   "type": "string"
+  },
+  {
+   "key": "favorite_product_id",
+   "value": "9",
    "type": "string"
   }
  ],
@@ -68,9 +73,22 @@
        "script": {
         "type": "text/javascript",
         "exec": [
-         "pm.test(\"Status code 201\", function () { pm.response.to.have.status(201); });",
          "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
-         "pm.test(\"Registrasi berhasil\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+         "// Collection ini dirancang supaya bisa dijalankan berulang kali. Pada run",
+         "// pertama akun belum ada sehingga backend menjawab HTTP 201. Pada run",
+         "// berikutnya akun yang sama sudah tersimpan, dan backend menolaknya dengan",
+         "// HTTP 409. Dua-duanya perilaku yang benar, jadi dua-duanya diterima.",
+         "pm.test(\"Akun baru dibuat (201) atau sudah terdaftar (409)\", function () {",
+         "    pm.expect([201, 409]).to.include(pm.response.code);",
+         "});",
+         "pm.test(\"Nilai status cocok dengan kode responsnya\", function () {",
+         "    pm.expect(pm.response.json().status).to.eql(pm.response.code === 201);",
+         "});",
+         "pm.test(\"Akun ganda tidak pernah dibuat\", function () {",
+         "    if (pm.response.code === 409) {",
+         "        pm.expect(pm.response.json().message).to.include(\"sudah terdaftar\");",
+         "    }",
+         "});"
         ]
        }
       }
@@ -94,7 +112,7 @@
         "register"
        ]
       },
-      "description": "Mendaftarkan akun baru ke tabel users.\n\nJalankan sekali untuk melihat respons berhasil (HTTP 201). Kalau dijalankan lagi dengan username yang sama, responsnya berubah menjadi HTTP 409 karena username sudah terdaftar.",
+      "description": "Mendaftarkan akun baru ke tabel users.\n\nRequest ini aman dijalankan berulang kali. Pada run pertama akun belum ada sehingga backend menjawab HTTP 201. Pada run berikutnya username dan email yang sama sudah tersimpan, sehingga backend menolaknya dengan HTTP 409 \"Username atau email sudah terdaftar.\" dan tidak membuat akun ganda. Pengujian di atas menerima kedua kemungkinan itu, jadi menjalankan seluruh Collection berkali-kali tetap menghasilkan nol kegagalan.",
       "body": {
        "mode": "urlencoded",
        "urlencoded": [
@@ -1306,6 +1324,306 @@
        }
       }
      ]
+    }
+   ]
+  },
+  {
+   "name": "7. Favorit",
+   "item": [
+    {
+     "name": "Daftar favorit pengguna",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "var d = pm.response.json();",
+         "pm.test(\"status true\", function () { pm.expect(d.status).to.eql(true); });",
+         "pm.test(\"data berbentuk array\", function () { pm.expect(d.data).to.be.an(\"array\"); });",
+         "pm.test(\"tiap favorit memuat product_id\", function () {",
+         "    d.data.forEach(function (f) { pm.expect(f).to.have.property(\"product_id\"); });",
+         "});"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/favorites?user_id={{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ],
+       "query": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}"
+        }
+       ]
+      },
+      "description": "Dipakai tombol Favorit pada halaman Beranda. Mengembalikan menu favorit satu pengguna beserta nama, harga, dan foto produknya."
+     }
+    },
+    {
+     "name": "Daftar favorit - tanpa user_id",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Tanpa user_id ditolak (HTTP 422)\", function () {",
+         "    pm.expect(pm.response.code).to.eql(422);",
+         "    pm.expect(pm.response.json().status).to.eql(false);",
+         "});"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/favorites",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ]
+      },
+      "description": "Parameter user_id sengaja tidak dikirim. Backend menolak dengan HTTP 422, bukan mengembalikan favorit milik orang lain."
+     }
+    },
+    {
+     "name": "Daftar favorit - user_id bukan angka",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"user_id bukan angka ditolak (HTTP 422)\", function () {",
+         "    pm.expect(pm.response.code).to.eql(422);",
+         "    pm.expect(pm.response.json().status).to.eql(false);",
+         "});"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "GET",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/favorites?user_id=abc",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ],
+       "query": [
+        {
+         "key": "user_id",
+         "value": "abc"
+        }
+       ]
+      },
+      "description": "user_id diisi teks. Backend memeriksa tipenya lebih dulu sebelum menyentuh database."
+     }
+    },
+    {
+     "name": "Tambah ke favorit",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Respons berbentuk JSON\", function () { pm.response.to.be.json; });",
+         "pm.test(\"Baru dibuat (201) atau sudah ada (200)\", function () {",
+         "    pm.expect([200, 201]).to.include(pm.response.code);",
+         "});",
+         "pm.test(\"status true\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/favorites",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ]
+      },
+      "description": "Menambahkan satu produk ke daftar favorit. Produk yang dipakai adalah {{favorite_product_id}}, yang belum ada pada daftar favorit pengguna {{user_id}}, lalu dihapus lagi oleh request DELETE di akhir folder. Dengan begitu data favorit lama pada database tidak berubah.\n\nKalau produk ternyata sudah ada di daftar favorit, backend menjawab HTTP 200 dengan pesan 'Produk sudah ada di daftar favorit.' dan tidak membuat baris ganda.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}",
+         "type": "text"
+        },
+        {
+         "key": "product_id",
+         "value": "{{favorite_product_id}}",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Tambah ke favorit - produk tidak ada",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Produk tidak ada ditolak (HTTP 404)\", function () {",
+         "    pm.expect(pm.response.code).to.eql(404);",
+         "    pm.expect(pm.response.json().status).to.eql(false);",
+         "});"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/x-www-form-urlencoded"
+       }
+      ],
+      "url": {
+       "raw": "{{base_url}}/api/favorites",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ]
+      },
+      "description": "ID produk yang tidak ada pada database. Backend menjawab HTTP 404 dan tidak membuat baris favorit yang menggantung.",
+      "body": {
+       "mode": "urlencoded",
+       "urlencoded": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}",
+         "type": "text"
+        },
+        {
+         "key": "product_id",
+         "value": "9999",
+         "type": "text"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Hapus dari favorit",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+         "pm.test(\"berhasil dihapus\", function () { pm.expect(pm.response.json().status).to.eql(true); });"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "DELETE",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/favorites?user_id={{user_id}}&product_id={{favorite_product_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ],
+       "query": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}"
+        },
+        {
+         "key": "product_id",
+         "value": "{{favorite_product_id}}"
+        }
+       ]
+      },
+      "description": "Menghapus kembali favorit yang dibuat oleh request POST di atas, sehingga isi database kembali seperti semula."
+     }
+    },
+    {
+     "name": "Hapus dari favorit - tanpa product_id",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.test(\"Tanpa product_id ditolak (HTTP 422)\", function () {",
+         "    pm.expect(pm.response.code).to.eql(422);",
+         "    pm.expect(pm.response.json().status).to.eql(false);",
+         "});"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "method": "DELETE",
+      "header": [],
+      "url": {
+       "raw": "{{base_url}}/api/favorites?user_id={{user_id}}",
+       "host": [
+        "{{base_url}}"
+       ],
+       "path": [
+        "api",
+        "favorites"
+       ],
+       "query": [
+        {
+         "key": "user_id",
+         "value": "{{user_id}}"
+        }
+       ]
+      },
+      "description": "product_id tidak dikirim, sehingga backend menolak dengan HTTP 422 dan tidak menghapus apa pun."
+     }
     }
    ]
   }

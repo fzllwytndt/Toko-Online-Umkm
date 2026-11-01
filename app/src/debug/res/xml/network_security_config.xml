@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Berkas ini HANYA dipakai pada build debug, dan menimpa berkas dengan nama
+    sama pada src/main. Build release tetap memakai daftar alamat yang ketat.
+
+    Isinya mengizinkan HTTP (bukan HTTPS) ke alamat mana pun, supaya backend
+    lokal bisa diakses dari HP Android fisik tanpa harus mendaftarkan IP
+    komputer satu per satu. IP komputer berubah setiap ganti jaringan Wi-Fi,
+    dan sebelumnya setiap perubahan itu memaksa berkas ini ikut diubah lalu
+    ter-commit ke Git.
+
+    Alamat backend sendiri diatur lewat server.url pada local.properties.
+
+    tools:ignore="InsecureBaseConfiguration" dipasang karena peringatan lint itu
+    memang benar untuk aplikasi yang dirilis, tetapi tidak berlaku di sini:
+    berkas ini tidak pernah ikut pada build release. Peringatannya ditandai
+    secara sadar supaya tidak terbaca sebagai kelalaian.
+-->
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <base-config
+        cleartextTrafficPermitted="true"
+        tools:ignore="InsecureBaseConfiguration" />
+</network-security-config>

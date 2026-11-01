@@ -18,8 +18,12 @@ if (PHP_SAPI === 'cli-server') {
     $berkas = realpath(__DIR__ . $jalur);
 
     // realpath dipakai supaya alamat seperti /../config/.env tidak bisa
-    // menembus keluar dari folder public.
-    if ($berkas !== false && is_file($berkas) && str_starts_with($berkas, realpath(__DIR__))) {
+    // menembus keluar dari folder public. Pemisah folder ikut disertakan pada
+    // pembanding, supaya folder tetangga yang namanya berawalan sama (misalnya
+    // public_lama) tidak ikut lolos lewat alamat seperti /../public_lama/rahasia.txt.
+    $folderPublic = realpath(__DIR__) . DIRECTORY_SEPARATOR;
+
+    if ($berkas !== false && is_file($berkas) && str_starts_with($berkas, $folderPublic)) {
         return false;
     }
 }

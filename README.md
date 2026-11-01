@@ -31,7 +31,7 @@ Arsitektur yang dipakai tetap **MVVM (Model–View–ViewModel)** dengan **Repos
 - Menekan sebuah menu membuka **halaman Detail Menu**, dan tombol kembali mengembalikan pengguna ke Beranda.
 - Menangani **loading**, **berhasil**, **error**, **data kosong**, **produk tidak ditemukan**, **koneksi bermasalah**, dan **respons tidak sesuai format** dengan `try-catch` pada Repository.
 - Daftar produk **tidak dimuat ulang tanpa alasan**: data hanya diambil saat halaman pertama kali dibuka atau ketika filter, pencarian, dan tombol **Coba lagi** ditekan.
-- Nilai yang memang bersifat konfigurasi (base URL) tetap berada di `ApiConfig`, bukan tersebar di dalam kode halaman.
+- Nilai yang memang bersifat konfigurasi (base URL) hanya dibaca lewat `ApiConfig`, bukan tersebar di dalam kode halaman. Alamatnya sendiri **tidak ditulis di dalam kode**, melainkan diisi pada `local.properties` (`server.url=http://192.168.1.5:3000/`) lalu dialirkan ke `ApiConfig` memakai `buildConfigField`. Alasannya IP komputer berbeda pada tiap mesin dan berubah setiap ganti jaringan Wi-Fi, sedangkan `local.properties` tidak ikut diunggah ke GitHub. Kalau baris itu tidak diisi, dipakai `http://10.0.2.2:3000/` yang cocok untuk Android Emulator.
 
 ## Endpoint yang Dipakai
 
@@ -151,6 +151,17 @@ Agar penamaan konsisten, `MainActivity` juga diubah menjadi **`SplashActivity`**
 - `data/repository/FavoriteRepository.kt` — **baru**.
 - `data/repository/UserRepository.kt` — `unduhAvatar()` kini memakai `PemuatGambar` yang sama dengan foto menu.
 
+**Android — konfigurasi**
+
+- `app/build.gradle.kts` — alamat backend dibaca dari `local.properties` (`server.url`) lalu dialirkan ke kode memakai `buildConfigField`, dengan `http://10.0.2.2:3000/` sebagai nilai bawaan. IP komputer tidak lagi ikut ter-commit.
+- `data/network/ApiConfig.kt` — `SERVER_URL` kini mengambil nilai dari `BuildConfig.SERVER_URL`.
+- `app/src/debug/res/xml/network_security_config.xml` — **baru**. Hanya dipakai build debug, mengizinkan HTTP ke alamat mana pun supaya IP komputer tidak perlu didaftarkan satu per satu setiap ganti jaringan.
+- `app/src/main/res/xml/network_security_config.xml` — kembali hanya memuat `10.0.2.2`, `localhost`, dan `127.0.0.1`, sehingga build release tetap ketat.
+
+**Postman**
+
+- `postman/Toko-Online-UMKM-Semarang.postman_collection.json` — tambah folder **7. Favorit** (7 request) untuk `GET`, `POST`, dan `DELETE /api/favorites` beserta kasus gagalnya, memakai variable baru `{{favorite_product_id}}`.
+
 **Android — util**
 
 - `util/PemuatGambar.kt` — **baru**. Pengunduh gambar bersama beserta cache sederhana, dipakai foto menu dan foto profil.
@@ -218,16 +229,19 @@ Catatan lain agar tampilan tetap jujur terhadap isi database:
 ## Cara Menguji
 
 1. Jalankan MySQL, lalu isi katalog menu sekali saja: `mysql -u root db_toko_online < backend/database/seed_produk.sql`.
-2. Jalankan backend: `php -S 0.0.0.0:3000 -t backend/public`.
-3. Jalankan aplikasi lalu login.
-4. **Beranda** menampilkan kategori dan daftar menu dari API. Coba tekan chip kategori, ketik kata kunci pada kolom pencarian, dan tekan tombol **Favorit**.
-5. Tekan salah satu kartu menu untuk membuka **Detail Menu**, lalu tekan tombol kembali untuk kembali ke Beranda.
-6. Tekan salah satu kartu pada **Pilih Menu** untuk membuka halaman kategori.
-7. Buka tab **Rekomendasi** untuk melihat bagian Best Seller dan Harga Terjangkau.
-8. Matikan backend lalu tekan **Coba lagi** untuk memastikan pesan koneksi muncul dan aplikasi tetap berjalan.
-9. Buka tab **Profil** lalu tekan **Keluar** untuk melihat pop up konfirmasi.
+2. Jalankan backend. Ada dua cara:
+   - **Otomatis (disarankan):** cukup Start **Apache** dan **MySQL** pada XAMPP Control Panel. Apache dibuat melayani sendiri folder `backend/public` pada port 3000, jadi REST API langsung hidup tanpa perintah tambahan. Cara menyiapkannya ada di `backend/README.md`.
+   - **Manual:** `php -S 0.0.0.0:3000 -t backend/public` (jangan dijalankan bersamaan dengan cara di atas, karena port 3000 hanya bisa dipegang satu proses).
+3. Pastikan `local.properties` sudah memuat `server.url` yang sesuai: `http://10.0.2.2:3000/` untuk emulator, atau `http://<IP-lokal-komputer>:3000/` untuk HP Android fisik (lihat IP dengan `ipconfig`). Setelah diubah, lakukan Sync/Rebuild. Build debug sudah mengizinkan HTTP ke alamat mana pun, jadi tidak ada berkas lain yang perlu disentuh.
+4. Jalankan aplikasi lalu login.
+5. **Beranda** menampilkan kategori dan daftar menu dari API. Coba tekan chip kategori, ketik kata kunci pada kolom pencarian, dan tekan tombol **Favorit**.
+6. Tekan salah satu kartu menu untuk membuka **Detail Menu**, lalu tekan tombol kembali untuk kembali ke Beranda.
+7. Tekan salah satu kartu pada **Pilih Menu** untuk membuka halaman kategori.
+8. Buka tab **Rekomendasi** untuk melihat bagian Best Seller dan Harga Terjangkau.
+9. Matikan backend lalu tekan **Coba lagi** untuk memastikan pesan koneksi muncul dan aplikasi tetap berjalan.
+10. Buka tab **Profil** lalu tekan **Keluar** untuk melihat pop up konfirmasi.
 
-Endpoint juga bisa diuji lewat Postman memakai collection `postman/Toko-Online-UMKM-Semarang.postman_collection.json`.
+Endpoint juga bisa diuji lewat Postman memakai collection `postman/Toko-Online-UMKM-Semarang.postman_collection.json`, termasuk folder **7. Favorit** untuk `GET`, `POST`, dan `DELETE /api/favorites` beserta kasus gagalnya (tanpa `user_id`, `user_id` bukan angka, produk tidak ada). Request `POST` dan `DELETE` pada folder itu hanya menyentuh produk `{{favorite_product_id}}` yang ditambahkan lalu dihapus lagi di folder yang sama, sehingga data favorit lama tidak berubah.
 
 ## Tangkapan Layar
 
