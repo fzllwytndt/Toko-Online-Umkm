@@ -88,9 +88,58 @@ File `.env` sudah didaftarkan pada `.gitignore`, jadi kredensial asli tidak ikut
    { "status": true, "message": "Backend Toko Online UMKM Semarang siap digunakan." }
    ```
 
-### Alternatif: lewat Apache XAMPP
+### Cara otomatis: lewat Apache XAMPP (disarankan)
 
-Backend juga bisa dijalankan lewat Apache dengan menambahkan Alias pada `httpd.conf` yang mengarah ke folder `backend/public`. File `.htaccess` di dalamnya sudah menyiapkan rewrite ke `index.php`. Cara `php -S` di atas lebih disarankan karena tidak perlu mengubah konfigurasi Apache.
+Supaya backend **tidak perlu dijalankan manual** setiap kali, Apache XAMPP dibuat melayani
+sendiri folder `backend/public` pada port 3000. Begitu **Apache** dan **MySQL** di-Start
+pada XAMPP Control Panel, database dan REST API langsung hidup bersamaan.
+
+Port 3000 tetap dipakai, bukan port 80, supaya alamat yang sudah dipakai aplikasi Android
+(`http://<ip-komputer>:3000/api/...`) tidak perlu diubah. Port 80 tetap melayani `htdocs`
+dan phpMyAdmin seperti biasa.
+
+**1. Tambahkan port 3000** pada `C:\xampp\apache\conf\httpd.conf`, tepat di bawah `Listen 80`:
+
+```apache
+Listen 3000
+```
+
+**2. Tambahkan VirtualHost** pada `C:\xampp\apache\conf\extra\httpd-vhosts.conf`
+(sesuaikan path dengan lokasi folder project sendiri):
+
+```apache
+<VirtualHost *:3000>
+    DocumentRoot "D:/path/ke/TokoOnlineUmkm/backend/public"
+
+    <Directory "D:/path/ke/TokoOnlineUmkm/backend/public">
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog "logs/ezpick-error.log"
+    CustomLog "logs/ezpick-access.log" common
+</VirtualHost>
+```
+
+`AllowOverride All` wajib ada supaya `backend/public/.htaccess` boleh mengarahkan seluruh
+alamat ke `index.php`. Modul `mod_rewrite` sudah aktif secara bawaan di XAMPP.
+
+**3. Periksa sintaks config,** lalu Stop dan Start Apache dari XAMPP Control Panel:
+
+```bash
+C:\xampp\apache\bin\httpd.exe -t
+```
+
+**4. Biar sekalian otomatis saat panel dibuka:** pada XAMPP Control Panel tekan **Config**,
+lalu centang **Apache** dan **MySQL** di bagian *Autostart of modules*.
+
+Cara `php -S` di atas tetap bisa dipakai, misalnya ketika Apache sedang tidak dipakai.
+Jangan menjalankan keduanya bersamaan karena port 3000 hanya bisa dipegang satu proses.
+
+Catatan: lewat Apache, berkas statis seperti foto menu dilayani langsung oleh Apache
+(lihat `RewriteCond %{REQUEST_FILENAME} !-f` pada `.htaccess`), sedangkan lewat `php -S`
+berkas itu dilayani oleh pemeriksaan `PHP_SAPI === 'cli-server'` di dalam `index.php`.
 
 ---
 
