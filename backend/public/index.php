@@ -3,6 +3,27 @@
 // Pintu masuk tunggal backend REST API Toko Online UMKM Semarang.
 // Semua request masuk ke file ini, lalu diteruskan ke routes/api.php.
 
+// Ketika dijalankan memakai server bawaan PHP sebagai router
+// (php -S 0.0.0.0:3000 -t backend/public backend/public/index.php),
+// seluruh request ikut masuk ke file ini, termasuk permintaan berkas statis
+// seperti /uploads/produk/miso-ramen.jpg. Tanpa pemeriksaan di bawah, berkas
+// tersebut akan ditolak sebagai "endpoint tidak ditemukan" karena alamatnya
+// tidak diawali /api, sehingga foto menu dan foto profil tidak pernah tampil.
+//
+// Mengembalikan false memberitahu server bawaan PHP untuk melayani sendiri
+// berkas yang memang ada di folder public. Di luar server bawaan (misalnya
+// Apache), bagian ini dilewati karena berkas statis sudah dilayani web server.
+if (PHP_SAPI === 'cli-server') {
+    $jalur = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+    $berkas = realpath(__DIR__ . $jalur);
+
+    // realpath dipakai supaya alamat seperti /../config/.env tidak bisa
+    // menembus keluar dari folder public.
+    if ($berkas !== false && is_file($berkas) && str_starts_with($berkas, realpath(__DIR__))) {
+        return false;
+    }
+}
+
 require_once __DIR__ . '/../config/response.php';
 require_once __DIR__ . '/../routes/api.php';
 

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.databinding.ActivityKategoriBinding
 import com.faizalwiyatnodito.tokoonlineumkm.ui.product.ProductAdapter
@@ -62,6 +63,8 @@ class CategoryActivity : AppCompatActivity() {
         produkAdapter = ProductAdapter(lifecycleScope) { produk ->
             startActivity(ProductDetailActivity.buatIntent(this, produk.id))
         }
+        binding.rvProduk.layoutManager = GridLayoutManager(this, 2)
+        binding.rvProduk.isNestedScrollingEnabled = false
         binding.rvProduk.adapter = produkAdapter
     }
 

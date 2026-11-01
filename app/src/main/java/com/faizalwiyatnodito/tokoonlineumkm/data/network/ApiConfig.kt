@@ -21,7 +21,7 @@ object ApiConfig {
     // pada res/xml/network_security_config.xml.
     // Alamat root server (tanpa /api). Dipakai untuk menyusun URL penuh foto profil,
     // karena file avatar dilayani di luar /api, contoh: http://10.0.2.2:3000/uploads/avatars/xxx.png
-    const val SERVER_URL = "http://10.0.2.2:3000/"
+    const val SERVER_URL = "http://192.168.18.154:3000/"
 
     private const val BASE_URL = SERVER_URL + "api/"
 

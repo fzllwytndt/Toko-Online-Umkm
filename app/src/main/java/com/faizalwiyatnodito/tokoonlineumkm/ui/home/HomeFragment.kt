@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.data.repository.UserRepository
 import com.faizalwiyatnodito.tokoonlineumkm.databinding.FragmentBerandaBinding
@@ -62,17 +64,29 @@ class HomeFragment : Fragment() {
     }
 
     private fun aturDaftar() {
+        // Daftar menu: grid 2 kolom. Gulir atas-bawah diserahkan ke NestedScrollView
+        // induknya, jadi grid dibiarkan terbuka penuh (nested scrolling dimatikan).
         produkAdapter = ProductAdapter(viewLifecycleOwner.lifecycleScope) { produk ->
             startActivity(ProductDetailActivity.buatIntent(requireContext(), produk.id))
         }
+        binding.rvProduk.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvProduk.isNestedScrollingEnabled = false
         binding.rvProduk.adapter = produkAdapter
 
+        // Bagian "Pilih Menu": kartu kategori digulir ke samping.
         kategoriAdapter = CategoryAdapter { kategori ->
             startActivity(CategoryActivity.buatIntent(requireContext(), kategori.id, kategori.name))
         }
+        binding.rvKategori.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvKategori.isNestedScrollingEnabled = false
         binding.rvKategori.adapter = kategoriAdapter
 
+        // Chip filter juga digulir ke samping mengikuti jumlah kategori dari API.
         filterAdapter = CategoryFilterAdapter { idKategori -> viewModel.pilihKategori(idKategori) }
+        binding.rvFilter.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvFilter.isNestedScrollingEnabled = false
         binding.rvFilter.adapter = filterAdapter
     }
 

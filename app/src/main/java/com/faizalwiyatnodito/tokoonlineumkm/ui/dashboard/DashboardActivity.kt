@@ -52,16 +52,30 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun aturBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { menu ->
-            val fragment: Fragment = when (menu.itemId) {
-                R.id.menu_beranda -> HomeFragment()
-                R.id.menu_rekomendasi -> RecommendationFragment()
-                R.id.menu_keranjang -> CartFragment()
-                else -> ProfileFragment()
+            val tag = menu.itemId.toString()
+
+            // Menu yang sedang aktif tidak perlu dibuat ulang, supaya posisi
+            // gulir halaman tidak melompat ke atas dan API tidak dipanggil lagi.
+            if (supportFragmentManager.findFragmentByTag(tag) == null) {
+                val fragment: Fragment = when (menu.itemId) {
+                    R.id.menu_beranda -> HomeFragment()
+                    R.id.menu_rekomendasi -> RecommendationFragment()
+                    R.id.menu_keranjang -> CartFragment()
+                    else -> ProfileFragment()
+                }
+
+                tampilkanFragment(fragment, tag)
             }
 
-            tampilkanFragment(fragment)
             true
         }
+
+        // Catatan: setOnItemReselectedListener sengaja TIDAK dipasang.
+        // Kalau listener itu ada, Bottom Navigation akan mengarahkan pemilihan
+        // menu yang sudah aktif ke sana dan tidak lagi memanggil listener di atas.
+        // Menu Beranda adalah item pertama (otomatis aktif sejak awal), jadi
+        // memasangnya membuat fragment Beranda tidak pernah dimuat saat dibuka.
+        // Pengulangan menu yang sama sudah dicegah oleh findFragmentByTag di atas.
     }
 
     // Dipakai bar atas halaman Beranda dan Rekomendasi agar ikon keranjang
@@ -70,9 +84,9 @@ class DashboardActivity : AppCompatActivity() {
         binding.bottomNavigation.selectedItemId = idMenu
     }
 
-    private fun tampilkanFragment(fragment: Fragment) {
+    private fun tampilkanFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()
-            .replace(binding.wadahFragment.id, fragment)
+            .replace(binding.wadahFragment.id, fragment, tag)
             .commit()
     }
 

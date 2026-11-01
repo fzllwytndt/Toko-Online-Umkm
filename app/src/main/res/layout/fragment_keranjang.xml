@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:paddingStart="20dp"
     android:paddingTop="24dp"
     android:paddingEnd="20dp"
@@ -33,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvJudul"
         tools:itemCount="2"
-        tools:listitem="@layout/item_cart" />
+        tools:listitem="@layout/item_keranjang" />
 
     <ProgressBar
         android:id="@+id/progressBar"

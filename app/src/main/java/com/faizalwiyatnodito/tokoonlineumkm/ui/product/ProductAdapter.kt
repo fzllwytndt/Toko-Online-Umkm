@@ -12,10 +12,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-// Kartu menu 2 kolom yang dipakai bersama oleh halaman Beranda, Rekomendasi,
-// dan Kategori. Menekan kartu akan membuka halaman Detail Menu.
+// Kartu menu yang dipakai bersama oleh halaman Beranda, Rekomendasi, dan Kategori.
+// Menekan kartu akan membuka halaman Detail Menu.
+//
+// lebarKartuDp mengatur bentuk daftarnya:
+// - null (bawaan) : lebar kartu mengikuti induknya, dipakai daftar 2 kolom
+//                   pada Beranda dan Kategori.
+// - diisi angka   : lebar kartu dipatok, dipakai daftar yang digulir ke samping
+//                   pada halaman Rekomendasi. Tanpa ini satu kartu akan selebar
+//                   layar karena item_produk.xml memakai match_parent.
 class ProductAdapter(
     private val cakupan: CoroutineScope,
+    private val lebarKartuDp: Int? = null,
     private val saatDiklik: (Product) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
@@ -29,6 +37,13 @@ class ProductAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding = ItemProdukBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        // Dipatok hanya untuk daftar yang digulir ke samping.
+        lebarKartuDp?.let { lebar ->
+            val kerapatan = parent.resources.displayMetrics.density
+            binding.root.layoutParams.width = (lebar * kerapatan).toInt()
+        }
+
         return ProductViewHolder(binding)
     }
 

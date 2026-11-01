@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.faizalwiyatnodito.tokoonlineumkm.R
 import com.faizalwiyatnodito.tokoonlineumkm.data.network.Product
 import com.faizalwiyatnodito.tokoonlineumkm.data.repository.UserRepository
@@ -56,10 +57,28 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun aturDaftar() {
-        bestSellerAdapter = ProductAdapter(viewLifecycleOwner.lifecycleScope, ::bukaDetail)
+        // Kedua bagian digulir ke samping, sementara halamannya tetap digulir
+        // atas-bawah oleh NestedScrollView pada layout. Nested scrolling pada
+        // daftar dimatikan supaya gesekan vertikal langsung diteruskan ke halaman
+        // dan tidak rebutan dengan gulir menyamping.
+        bestSellerAdapter = ProductAdapter(
+            viewLifecycleOwner.lifecycleScope,
+            LEBAR_KARTU_DP,
+            ::bukaDetail
+        )
+        binding.rvBestSeller.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvBestSeller.isNestedScrollingEnabled = false
         binding.rvBestSeller.adapter = bestSellerAdapter
 
-        terjangkauAdapter = ProductAdapter(viewLifecycleOwner.lifecycleScope, ::bukaDetail)
+        terjangkauAdapter = ProductAdapter(
+            viewLifecycleOwner.lifecycleScope,
+            LEBAR_KARTU_DP,
+            ::bukaDetail
+        )
+        binding.rvTerjangkau.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTerjangkau.isNestedScrollingEnabled = false
         binding.rvTerjangkau.adapter = terjangkauAdapter
     }
 
@@ -133,5 +152,12 @@ class RecommendationFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        // Lebar kartu menu pada daftar yang digulir ke samping.
+        // Dipilih supaya kartu berikutnya ikut terlihat sebagian,
+        // sehingga pengguna tahu daftarnya masih bisa digeser.
+        private const val LEBAR_KARTU_DP = 170
     }
 }
