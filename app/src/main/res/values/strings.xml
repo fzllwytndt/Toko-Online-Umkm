@@ -16,8 +16,6 @@
     <string name="button_submit">Submit</string>
     <string name="register_sudah_punya_akun">Sudah punya akun?</string>
     <string name="register_masuk_di_sini">Masuk di sini</string>
-    <string name="dashboard_title">Dashboard</string>
-    <string name="dashboard_welcome">Selamat datang,</string>
     <string name="button_logout">Keluar</string>
     <string name="error_username_kosong">Username tidak boleh kosong</string>
     <string name="error_username_pendek">Username minimal %1$d karakter</string>
@@ -69,7 +67,6 @@
 
     <!-- Halaman Profil -->
     <string name="profil_judul">Profil</string>
-    <string name="profil_username">Username</string>
     <string name="profil_email">Email</string>
     <string name="profil_no_tlp">Nomor Telepon</string>
     <string name="profil_label_user">User</string>
@@ -80,12 +77,9 @@
     <string name="edit_profil_judul">Edit Profil</string>
     <string name="edit_profil_ganti_foto">Ganti Profil</string>
     <string name="edit_profil_hint_nickname">Ubah Nickname</string>
-    <string name="edit_profil_label_nickname">Nickname</string>
     <string name="button_konfirmasi">Konfirmasi</string>
     <string name="button_batal">Batal</string>
     <string name="desc_kembali">Kembali</string>
-    <string name="desc_ganti_foto">Ganti foto profil</string>
-    <string name="pesan_profil_diperbarui">Profil berhasil diperbarui</string>
 
     <!-- Pesan umum -->
     <string name="button_coba_lagi">Coba lagi</string>
@@ -125,7 +119,6 @@
     <string name="detail_judul">Detail Menu</string>
     <string name="format_breadcrumb_detail">Beranda / %1$s</string>
     <string name="detail_label_deskripsi">Deskripsi</string>
-    <string name="detail_label_kategori">Kategori</string>
     <string name="detail_deskripsi_kosong">Deskripsi menu belum tersedia.</string>
     <string name="detail_kategori_kosong">Tanpa kategori</string>
     <string name="detail_tidak_ditemukan">Menu tidak ditemukan.</string>
